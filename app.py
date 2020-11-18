@@ -16,8 +16,8 @@ CONF = {
     "base_url" : "/virusurf-eit",
     "virusviz" : "http://genomic.elet.polimi.it/virusviz/static/#!/home",
     "mail_enabled" : True,
-    "mail_address" : "",
-    "mail_password" : ""
+    "mail_address" : "virusurf@aol.com",
+    "mail_password" : "pvrmfhswyzhfvled"
 }
 
 CONF["jsonApi"] =  CONF["host"]+CONF["base_url"]+"/api/json/"
@@ -29,7 +29,7 @@ app = Flask(__name__,static_url_path=CONF["base_url"] + '', static_folder='./sta
 cors = CORS(app, resources={r"/virusurf-eit/api/*": {"origins": "*"}})
 
 # MAIL CONFIG
-app.config['MAIL_SERVER']='smtp.gmail.com'
+app.config['MAIL_SERVER']='smtp.aol.com'
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USERNAME'] = CONF["mail_address"]
 app.config['MAIL_PASSWORD'] = CONF["mail_password"]
@@ -76,7 +76,7 @@ def setError(id, errorMessage) :
 
 
 def sendEmail(id, success):
-    if CONF["mail_enabled"]:
+    if not CONF["mail_enabled"]:
         logger.debug("mail is disables")
         return
     if "notifyTo" in STATUS[id] and STATUS[id]["notifyTo"].strip() != '':
@@ -88,11 +88,11 @@ def sendEmail(id, success):
 
         status = 'SUCCESS' if success else 'FAILED'
         landing = CONF["host"]+CONF["base_url"]+"/"+id
-        msg = Message('ViruSurf-EIT Execution ', sender = CONF['mail_address'], recipients = [to])
+        msg = Message('ViruSurf-EIT Execution '+to, sender = CONF['mail_address'], recipients = [to])
         msg.body = "Dear User, \n the execution status of your computation has changed to "+status+"."
         if success :
             msg.body = msg.body + "\n\n  The result is available at the following address: \n "
-        msg.body = msg.body + "<a href='"+landing+"'>"+landing+"</a>"
+        msg.body = msg.body +landing
 
         mail.send(msg)
         logger.debug("SENT")
