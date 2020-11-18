@@ -1,0 +1,17 @@
+blinker==1.4
+click==7.1.2
+coloredlogs==14.0
+fasteners==0.15
+Flask==1.1.2
+Flask-Cors==3.0.9
+Flask-Executor==0.9.4
+Flask-Mail==0.9.1
+humanfriendly==8.2
+itsdangerous==1.1.0
+Jinja2==2.11.2
+MarkupSafe==1.1.1
+monotonic==1.5
+property-manager==3.0
+six==1.15.0
+verboselogs==1.7
+Werkzeug==1.0.1
