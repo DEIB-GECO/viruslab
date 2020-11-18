@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="./libs/bootstrap-4/css/bootstrap.min.css">
+    <title>ViruSurf-EIT</title>
+</head>
+
+
+<body ng-app="app" ng-controller="main_ctrl">
+
+<nav class="navbar navbar-dark bg-dark">
+    <a class="navbar-brand" href="#">ViruSurf-EIT</a>
+</nav>
+<div class="container">
+
+    <div class="col-md-6 offset-md-3 mt-5">
+
+        <div ng-if="!state.ready && !state.processing">
+            <img width="70" src='./img/virus.svg'>
+            <br>
+            <h1>Upload your sequences</h1>
+            <p>If you provide your email address you will be notified once the processing is finished.</p>
+            <form accept-charset="UTF-8" ng-submit="submit()">
+                <div class="form-group">
+                    <label for="exampleInputEmail1" required="required">Email address</label>
+                    <input type="email" name="email" class="form-control" ng-model="state.email"
+                           id="email" aria-describedby="emailHelp" placeholder="Enter email">
+                </div>
+                <!--div class="form-group">
+                    <label for="exampleFormControlSelect1">Favourite Platform</label>
+                    <select class="form-control" id="exampleFormControlSelect1" name="platform" required="required">
+                        <option>Github</option>
+                        <option>Gitlab</option>
+                        <option>Bitbucket</option>
+                    </select>
+                </div-->
+                <hr>
+                <div class="form-group mt-3">
+                    <label class="mr-2">Choose a FASTA file (sequences):</label>
+                    <input type="file" name="fasta" id="fasta" required>
+                </div>
+
+                <div class="form-group mt-3">
+                    <label class="mr-2">Choose a CSV file (meta):</label>
+                    <input type="file" name="meta" id="meta" required>
+                </div>
+
+                <hr>
+                <button type="submit" class="btn btn-primary">Start</button>
+            </form>
+        </div>
+
+        <div ng-if="!state.ready && state.processing" class="text-center">
+            <img width="70" src='./img/running.gif'>
+            <br>
+            <h1>Please wait</h1>
+            <p>
+                We are processing your sequences. <br>
+                This process could take up to {{ state.numSequences*MINUTES_PER_SEQ }} minutes. <br><br>
+                <span ng-if="!(state.email && state.email!='')">
+                    Since you didn't provide an email address,  don't close this page until the result is ready or <b>save it in your bookmarks</b>.<br><br>
+
+                </span>
+                <span ng-if="state.email && state.email!=''">
+                    If you don't want to wait, feel free to close this window; we will send an email to <a href="emailto:{{state.email}}">{{state.email}}</a> once the result is ready. <br>
+                    Alternatively, you can add this page to your bookmarks and come back later. <br><br>
+
+                </span>
+
+            </p>
+        </div>
+
+
+        <div ng-if="state.ready" class="text-center">
+            <h1>Your result is ready!</h1>
+            <p>You can now visualize it on VirusViz:</p>
+            <br>
+
+            <a class="btn btn-lg" style="background-color: #009688; color:white;"
+               target="_blank"
+               href="{{state.virusVizAddress}}?appName=ViruSurf-EIT&dataURL={{state.jsonAddress}}&appURL={{getCurrentLocation()}} }}">
+                <img src="img/virusviz-logo-name.png" width="25px">
+                Open in VirusViz
+                <a/>
+                <br><br>
+                or <a class="btn btn-sm btn-secondary" ng-click="reset()" style="color:white"> upload new seqeunces</a>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script src="./libs/angular-js/angular.min.js"></script>
+<script src="./libs/angular-js/angular-route.min.js"></script>
+<script src="./controllers/helper.js"></script>
+<script src="./controllers/app.js"></script>
+
+<script src="./libs/jquery/jquery-3.5.1.min.js"></script>
+<script src="./libs/bootstrap-4/js/bootstrap.bundle.min.js"></script>
+<script src="./libs/bootbox/bootbox.min.js"></script>
+
+
+</body>
+</html>
