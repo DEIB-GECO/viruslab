@@ -16,8 +16,8 @@ CONF = {
     "base_url" : "/virusurf-eit",
     "virusviz" : "http://genomic.elet.polimi.it/virusviz/static/#!/home",
     "mail_enabled" : True,
-    "mail_address" : "virusurf@aol.com",
-    "mail_password" : "pvrmfhswyzhfvled"
+    "mail_address" : "",
+    "mail_password" : ""
 }
 
 CONF["jsonApi"] =  CONF["host"]+CONF["base_url"]+"/api/json/"
@@ -87,8 +87,8 @@ def sendEmail(id, success):
         logger.debug(app.config['MAIL_PASSWORD'])
 
         status = 'SUCCESS' if success else 'FAILED'
-        landing = CONF["host"]+CONF["base_url"]+"/"+id
-        msg = Message('ViruSurf-EIT Execution '+to, sender = CONF['mail_address'], recipients = [to])
+        landing = CONF["host"]+CONF["base_url"]+"/#!/"+id
+        msg = Message('ViruSurf-EIT Execution '+status, sender = CONF['mail_address'], recipients = [to])
         msg.body = "Dear User, \n the execution status of your computation has changed to "+status+"."
         if success :
             msg.body = msg.body + "\n\n  The result is available at the following address: \n "
