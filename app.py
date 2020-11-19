@@ -3,7 +3,6 @@ import os
 import time
 import urllib
 import uuid
-from urllib.request import urlopen
 
 import flask
 from flask import Flask, abort, redirect, request
@@ -11,30 +10,20 @@ from flask_executor import Executor
 from flask_cors import CORS
 from flask_mail import Mail, Message
 
-CONF = {
-    "host":  "http://127.0.0.1:5000/",
-    "base_url" : "/virusurf-eit",
-    "virusviz" : "http://genomic.elet.polimi.it/virusviz/static/#!/home",
-    "mail_enabled" : True,
-    "mail_address" : "",
-    "mail_password" : ""
-}
+from support import setupMailConfig
 
-CONF["jsonApi"] =  CONF["host"]+CONF["base_url"]+"/api/json/"
+# Import Configuration
+with open('config.json') as json_file:
+    CONF = json.load(json_file)
 
-os.environ["FLASK_DEBUG"] = "1"
+    if CONF["debug"]:
+        os.environ["FLASK_DEBUG"] = "1"
 
+    CONF["jsonApi"] = CONF["host"] + CONF["base_url"] + "/api/json/"
 
+# Setup Flask APP
 app = Flask(__name__,static_url_path=CONF["base_url"] + '', static_folder='./static')
 cors = CORS(app, resources={r"/virusurf-eit/api/*": {"origins": "*"}})
-
-# MAIL CONFIG
-app.config['MAIL_SERVER']='smtp.aol.com'
-app.config['MAIL_PORT'] = 465
-app.config['MAIL_USERNAME'] = CONF["mail_address"]
-app.config['MAIL_PASSWORD'] = CONF["mail_password"]
-app.config['MAIL_USE_TLS'] = False
-app.config['MAIL_USE_SSL'] = True
 
 executor = Executor(app)
 
@@ -43,6 +32,7 @@ with app.app_context():
     STATUS = dict()
     JSON = dict()
 
+    setupMailConfig(app, CONF)
     mail = Mail(app)
 
 # Redirect to /virusviz-eit
@@ -50,76 +40,34 @@ with app.app_context():
 def hello():
     return redirect(CONF["base_url"], code=302)
 
-
 # Serve static content
 @app.route(CONF["base_url"] + '/')
 def root():
     return app.send_static_file('index.html')
 
-
+# Generatea unique ID associated to each computation
 def generateUUID():
     return str(uuid.uuid4())
 
+# Set the JSON result of a computation and notify the user
 def setJSON(id, pythonDictionary):
     JSON[id] = json.dumps(pythonDictionary);
     STATUS[id]["ready"] = True;
 
     sendEmail(id, True)
 
-
+# Set the error status for a compuation and notify the user
 def setError(id, errorMessage) :
     STATUS[id]["failed"] = "True"
-    STATUS[id]["errorMessage"] = "True"
+    STATUS[id]["errorMessage"] = errorMessage
 
     sendEmail(id, False)
 
 
+def setParsedSequences(id, num) :
+    STATUS[id]["parsedSequences"] = num
 
-def sendEmail(id, success):
-    if not CONF["mail_enabled"]:
-        logger.debug("mail is disables")
-        return
-    if "notifyTo" in STATUS[id] and STATUS[id]["notifyTo"].strip() != '':
-
-        to = STATUS[id]["notifyTo"].strip()
-        logger.debug("sending email to " + to)
-        logger.debug(app.config['MAIL_USERNAME'])
-        logger.debug(app.config['MAIL_PASSWORD'])
-
-        status = 'SUCCESS' if success else 'FAILED'
-        landing = CONF["host"]+CONF["base_url"]+"/#!/"+id
-        msg = Message('ViruSurf-EIT Execution '+status, sender = CONF['mail_address'], recipients = [to])
-        msg.body = "Dear User, \n the execution status of your computation has changed to "+status+"."
-        if success :
-            msg.body = msg.body + "\n\n  The result is available at the following address: \n "
-        msg.body = msg.body +landing
-
-        mail.send(msg)
-        logger.debug("SENT")
-
-
-# Long computation goes here
-# success: you call  setJSON(id, json_as_python_dictionary)
-# error: you call setError(id, errorMessage)
-def compute(id, fastaText, metaText):
-
-    time.sleep(5)
-
-    # Here I am just loading an example json from file
-    try:
-        with open('./static/result.json') as json_file:
-
-            data = json.load(json_file)
-            setJSON(id,data)
-
-    except:
-        # if it fails:
-        setError(id, "Error reading the example JSON file");
-
-
-
-
-# UPLOAD API
+# Handle files upload and start the computation
 @app.route(CONF["base_url"] + '/api/upload/', methods=['POST'])
 def upload():
     email = request.form.get('emailAddress')
@@ -128,21 +76,19 @@ def upload():
 
     id = generateUUID()
 
-    logger.debug(id)
-    logger.debug(email)
-
     STATUS[id] = {
         "ready": False,
         "failed": False,
         "failedMessage": "",
         "notifyTo": email,
         "jsonAddress": urllib.parse.quote(CONF["jsonApi"])+id,
-        "virusVizAddress": CONF["virusviz"]
+        "virusVizAddress": CONF["virusviz"],
+        "startedAt": int(round(time.time() * 1000))
     }
 
     def async_function():
         try:
-            compute(id, fasta, meta)
+            process(id, fasta, meta)
 
         except Exception as e:
             STATUS[id] = {
@@ -150,18 +96,35 @@ def upload():
                 "failed": True,
                 "failedMessage": "Unknown server exeption"
             }
-
-            logger.error("Exeption occurred in the executor. ")
             logger.error("Async error", e)
-
             raise e
 
+    # Start the asynchronous computation
     executor.submit(async_function)
 
-    return json.dumps(
-        {"id": id}
-    )
+    # Reply with the computation ID
+    return json.dumps({"id": id})
 
+# Process the uploaded files (@pietro,@arif)
+def process(id, fastaText, metaText):
+
+    # success: you call  setJSON(id, json_as_python_dictionary)
+    # error: you call setError(id, errorMessage)
+    # setParsedSequences(id, num)
+
+    # EXAMPLE:
+    setParsedSequences(id, 2)
+
+    try:
+        with open('./static/result.json') as json_file:
+            data = json.load(json_file)
+            time.sleep(10)
+            setJSON(id,data)
+    except:
+        setError(id, "Error reading the example JSON file");
+
+
+# Get the result of a computation (VirusViz will call this)
 @app.route(CONF["base_url"] + '/api/json/<string:id>', methods=['GET'])
 def getJson(id):
     if id in JSON:
@@ -169,6 +132,7 @@ def getJson(id):
     else:
         abort(404)
 
+# Get the status of a computation
 @app.route(CONF["base_url"] + '/api/upload/status/<string:id>', methods=['GET'])
 def getStatus(id):
     logger.debug("asking status")
@@ -177,6 +141,35 @@ def getStatus(id):
         return STATUS[id]
     else:
         abort(404)
+
+# Send a notification about the completion of a computation if an email was provided
+def sendEmail(id, success):
+    if not CONF["mail_enabled"]:
+        logger.debug("mail is disables")
+        return
+
+    if "notifyTo" in STATUS[id] and STATUS[id]["notifyTo"].strip() != '':
+
+        to = STATUS[id]["notifyTo"].strip()
+        logger.debug("sending email to " + to)
+        logger.debug(app.config['MAIL_USERNAME'])
+        logger.debug(app.config['MAIL_PASSWORD'])
+
+        landing = CONF["host"]+CONF["base_url"]+"/#!/"+id
+
+        subject = "Processing completed." if(success) else "Execution failed."
+
+        msg = Message(subject, sender = CONF['mail_address'], recipients = [to])
+        if success:
+            msg.body = "Dear User, \n your sequences were successfully processed.\n\n The results are available on this page:\n"
+        else:
+            msg.body = "Dear User, \n unfortunately, we were not able to process your sequences.\n\n Further details are available on this page:\n"
+
+        msg.body = msg.body + landing
+
+        mail.send(msg)
+
+        logger.debug("Email Sents")
 
 
 if __name__ == '__main__':

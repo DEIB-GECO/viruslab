@@ -35,12 +35,12 @@ app.controller('main_ctrl', function($scope, $http, $timeout, $location, $routeP
     $scope.UPLOAD_API = "api/upload/";
     $scope.POLL_API = "api/upload/status/";
 
-    $scope.POLLING_TIMEOUT = 1000;
+    $scope.POLLING_TIMEOUT = 3000;
 
-    $scope.MINUTES_PER_SEQ = 1;
+    $scope.MINUTES_PER_SEQ = 2;
 
     $scope.getCurrentLocation = function() {
-        return $location.host();
+        return  window.location.href;
     }
 
     $scope.poll = function(id) {
@@ -53,6 +53,19 @@ app.controller('main_ctrl', function($scope, $http, $timeout, $location, $routeP
             function success(response) {
 
                 $scope.state.email = response.data.notifyTo;
+
+                if("parsedSequences" in response.data)
+                   $scope.state.numSequences  = response.data.parsedSequences;
+
+                var startedAt =  parseInt(response.data.startedAt);
+                var elapsed = (new Date().getTime() - startedAt)/1000;
+                var timeTotal= $scope.state.numSequences*$scope.MINUTES_PER_SEQ*60;
+                var timeleft = parseInt(timeTotal-elapsed);
+                var leftPerc = Math.floor((timeleft/timeTotal)<0?0:(timeleft/timeTotal)*100);
+
+                $("#progressBar").css("width",leftPerc+"%");
+                $("#progressBar").text(leftPerc+"%");
+
 
                 if( response.data.ready == true) {
 
@@ -79,11 +92,39 @@ app.controller('main_ctrl', function($scope, $http, $timeout, $location, $routeP
             function error(response) {
                 $scope.state.processing = false;
                 $scope.state.ready = false;
-                bootbox.alert("An error occurred. Response status: " + response.statusText+".");
+                if(response.status==404) {
+                    var message = "The result for this computation is no more available.";
+                    bootbox.confirm(message, function (result) {
+                        $scope.reset();
+                    })
+                }
+
             });
 
     }
 
+    $scope.checkFasta = function checkFasta(d) {
+
+        let fastaFile = document.getElementById("fasta");
+        console
+
+        if (fastaFile.files.length>0) {
+
+            let fastaReader = new FileReader();
+
+            fastaReader.onloadend = function (e_fasta) {
+                let fastaText = e_fasta.target.result;
+                $scope.$apply( a => {
+                        $scope.state.numSequences = (fastaText.match(/>/g) || []).length;
+                        console.log($scope.state.numSequences, "sequences found.");
+                    }
+                );
+
+            }
+
+            fastaReader.readAsText(fastaFile.files[0]);
+        }
+    }
 
 
     $scope.upload = function(requestBody) {
@@ -108,9 +149,6 @@ app.controller('main_ctrl', function($scope, $http, $timeout, $location, $routeP
 
     }
 
-
-
-
     $scope.submit = function() {
 
         console.log("submit called");
@@ -133,30 +171,15 @@ app.controller('main_ctrl', function($scope, $http, $timeout, $location, $routeP
 
                 metaReader.onloadend = function (e_meta) {
 
-                    console.log("META was read.")
-
                     let metaText = e_meta.target.result;
 
-                    $scope.state.numSequences = (fastaText.match(/>/g) || []).length;
-                    // Add here check on CSV (metaText)
+                    let requestBody = {
+                        emailAddress: $scope.state.email,
+                        fastaText: fastaText,
+                        metaText: metaText
+                    }
 
-                    var message = "Your FASTA file contains " + $scope.state.numSequences + " sequence" +
-                        ($scope.state.numSequences > 1 ? 's' : '') + ".<br>Do you want to proceed?";
-                    bootbox.confirm(message, function (result) {
-
-                        if (result) {
-
-                            let requestBody = {
-                                emailAddress: $scope.state.email,
-                                fastaText: fastaText,
-                                metaText: metaText
-                            }
-
-                            $scope.upload(requestBody);
-
-                        }
-                    });
-
+                    $scope.upload(requestBody);
 
                 }
                 metaReader.readAsText(metaFile.files[0]);
@@ -165,22 +188,16 @@ app.controller('main_ctrl', function($scope, $http, $timeout, $location, $routeP
         }
     }
 
-
-
-
     $scope.$on('$routeChangeSuccess', function() {
 
             if ("id" in $routeParams) {
                 //console.log("found id "+$routeParams["id"]);
                 $scope.state.resultId = $routeParams["id"];
+                $scope.state.processing = true;
                 $scope.poll($scope.state.resultId);
             }
         }
     );
 
 
-
-
 });
-
-

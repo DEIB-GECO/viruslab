@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" >
+<html lang="en" ng-app="app">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="./libs/bootstrap-4/css/bootstrap.min.css">
@@ -7,7 +7,7 @@
 </head>
 
 
-<body ng-app="app" ng-controller="main_ctrl">
+<body ng-controller="main_ctrl">
 
 <nav class="navbar navbar-dark bg-dark">
     <a class="navbar-brand" href="#">ViruSurf-EIT</a>
@@ -20,34 +20,36 @@
             <img width="70" src='./img/virus.svg'>
             <br>
             <h1>Upload your sequences</h1>
-            <p>If you provide your email address you will be notified once the processing is finished.</p>
+            <p></p>
             <form accept-charset="UTF-8" ng-submit="submit()">
-                <div class="form-group">
-                    <label for="exampleInputEmail1" required="required">Email address</label>
-                    <input type="email" name="email" class="form-control" ng-model="state.email"
-                           id="email" aria-describedby="emailHelp" placeholder="Enter email">
-                </div>
-                <!--div class="form-group">
-                    <label for="exampleFormControlSelect1">Favourite Platform</label>
-                    <select class="form-control" id="exampleFormControlSelect1" name="platform" required="required">
-                        <option>Github</option>
-                        <option>Gitlab</option>
-                        <option>Bitbucket</option>
-                    </select>
-                </div-->
                 <hr>
                 <div class="form-group mt-3">
-                    <label class="mr-2">Choose a FASTA file (sequences):</label>
-                    <input type="file" name="fasta" id="fasta" required>
+                    <label class="mr-2">Choose a <code>FASTA</code> file (sequences):</label>
+                    <input type="file" name="fasta" id="fasta" required
+                           onchange="angular.element(this).scope().checkFasta()">
                 </div>
 
                 <div class="form-group mt-3">
-                    <label class="mr-2">Choose a CSV file (meta):</label>
+                    <label class="mr-2">Choose a <code>CSV</code> file (metadata):</label>
                     <input type="file" name="meta" id="meta" required>
                 </div>
 
+                <span ng-if="state.numSequences>1">Your file contains <code>{{state.numSequences}} sequences</code> and the processing could take up to
+                    <code>{{ state.numSequences*MINUTES_PER_SEQ }}</code> <b>minutes</b>. <br>
+                    If you provide an email address, you will be notified once the results are ready.
+
+               </span>
+                <div class="form-group" ng-if="state.numSequences>1">
+                    <!--label for="exampleInputEmail1" required="required">Email address</label-->
+                    <input type="email" name="email" class="form-control" ng-model="state.email"
+                           id="email" aria-describedby="emailHelp" placeholder="Enter email">
+                </div>
+
+                <span ng-if="state.numSequences!=null && state.numSequences<1" style="color:#e55555">
+                    The selected file doesn't seem to contain any valid sequence.
+                </span>
                 <hr>
-                <button type="submit" class="btn btn-primary">Start</button>
+                <button type="submit" ng-disabled="!state.numSequences && state.numSequences<1" class="btn btn-primary">Submit</button>
             </form>
         </div>
 
@@ -55,6 +57,11 @@
             <img width="70" src='./img/running.gif'>
             <br>
             <h1>Please wait</h1>
+            <br>
+            <div class="progress">
+                <div  id="progressBar" class="progress-bar" role="progressbar"  aria-valuemin="0" aria-valuemax="100">25%</div>
+            </div>
+            <br>
             <p>
                 We are processing your sequences. <br>
                 This process could take up to {{ state.numSequences*MINUTES_PER_SEQ }} minutes. <br><br>
@@ -82,9 +89,9 @@
                href="{{state.virusVizAddress}}?appName=ViruSurf-EIT&dataURL={{state.jsonAddress}}&appURL={{getCurrentLocation()}} }}">
                 <img src="img/virusviz-logo-name.png" width="25px">
                 Open in VirusViz
-                <a/>
-                <br><br>
-                or <a class="btn btn-sm btn-secondary" ng-click="reset()" style="color:white"> upload new seqeunces</a>
+            </a>
+            <br><br>
+            or <a ng-click="reset()" href="javascript:void(0);"> upload new seqeunces.</a>
 
         </div>
 
