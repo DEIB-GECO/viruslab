@@ -59,7 +59,7 @@ def setJSON(id, pythonDictionary):
 # Set the error status for a compuation and notify the user
 def setError(id, errorMessage) :
     STATUS[id]["failed"] = "True"
-    STATUS[id]["errorMessage"] = errorMessage
+    STATUS[id]["failedMessage"] = errorMessage
 
     sendEmail(id, False)
 
@@ -75,6 +75,7 @@ def upload():
     meta = request.form.get('metaText')
 
     id = generateUUID()
+    logger.debug(id)
 
     STATUS[id] = {
         "ready": False,
@@ -85,6 +86,8 @@ def upload():
         "virusVizAddress": CONF["virusviz"],
         "startedAt": int(round(time.time() * 1000))
     }
+
+    JSON[id] = {"ready":False}
 
     def async_function():
         try:
@@ -116,9 +119,9 @@ def process(id, fastaText, metaText):
     setParsedSequences(id, 2)
 
     try:
-        with open('./static/result.json') as json_file:
+        with open('./static/big_result.json') as json_file:
             data = json.load(json_file)
-            time.sleep(10)
+            time.sleep(20)
             setJSON(id,data)
     except:
         setError(id, "Error reading the example JSON file");

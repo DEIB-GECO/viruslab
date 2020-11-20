@@ -53,9 +53,11 @@ app.controller('main_ctrl', function($scope, $http, $timeout, $location, $routeP
             function success(response) {
 
                 $scope.state.email = response.data.notifyTo;
+                $scope.state.jsonAddress = response.data.jsonAddress;
+                $scope.state.virusVizAddress = response.data.virusVizAddress;
 
                 if("parsedSequences" in response.data)
-                   $scope.state.numSequences  = response.data.parsedSequences;
+                    $scope.state.numSequences  = response.data.parsedSequences;
 
                 var startedAt =  parseInt(response.data.startedAt);
                 var elapsed = (new Date().getTime() - startedAt)/1000;
@@ -68,14 +70,8 @@ app.controller('main_ctrl', function($scope, $http, $timeout, $location, $routeP
 
 
                 if( response.data.ready == true) {
-
-                    $scope.state.jsonAddress = response.data.jsonAddress;
-                    $scope.state.virusVizAddress = response.data.virusVizAddress;
-
                     $scope.state.processing = false;
                     $scope.state.ready = true;
-
-
                 } else if(response.data.failed) {
 
                     $scope.state.processing = false;
