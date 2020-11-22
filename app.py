@@ -12,6 +12,8 @@ from flask_mail import Mail, Message
 
 from support import setupMailConfig
 
+import consensus_analysis as ca
+
 # Import Configuration
 with open('config.json') as json_file:
     CONF = json.load(json_file)
@@ -92,7 +94,6 @@ def upload():
     def async_function():
         try:
             process(id, fasta, meta)
-
         except Exception as e:
             STATUS[id] = {
                 "ready": False,
@@ -114,17 +115,26 @@ def process(id, fastaText, metaText):
     # success: you call  setJSON(id, json_as_python_dictionary)
     # error: you call setError(id, errorMessage)
     # setParsedSequences(id, num)
-
-    # EXAMPLE:
-    setParsedSequences(id, 2)
-
     try:
-        with open('./static/big_result.json') as json_file:
-            data = json.load(json_file)
-            time.sleep(20)
-            setJSON(id,data)
-    except:
-        setError(id, "Error reading the example JSON file");
+        sequences, metadata = ca.parse_inputs(fastaText, metaText)
+        setParsedSequences(id, len(metadata.keys()))
+
+        ca.pipeline(sequences, metadata)
+    except ca.InputException as e:
+        print(f"\n\n{e.msg}\n\n")
+        setError(id, e.msg)
+    except Exception as e:
+        print(type(e))
+    # EXAMPLE:
+    #setParsedSequences(id, 2)
+
+    #try:
+    #    with open('./static/big_result.json') as json_file:
+    #        data = json.load(json_file)
+    #        time.sleep(20)
+    #        setJSON(id,data)
+    #except:
+    #    setError(id, "Error reading the example JSON file");
 
 
 # Get the result of a computation (VirusViz will call this)
