@@ -1,0 +1,14 @@
+java -jar snpEff.jar build -genbank -v betacoronavirus_england_1
+java -jar snpEff.jar build -genbank -v bombali_ebolavirus
+java -jar snpEff.jar build -genbank -v bundibugyo_ebolavirus
+java -jar snpEff.jar build -genbank -v dengue_virus_1
+java -jar snpEff.jar build -genbank -v dengue_virus_2
+java -jar snpEff.jar build -genbank -v dengue_virus_3
+java -jar snpEff.jar build -genbank -v dengue_virus_4
+java -jar snpEff.jar build -genbank -v mers
+java -jar snpEff.jar build -genbank -v reston_ebolavirus
+java -jar snpEff.jar build -genbank -v sudan_ebolavirus
+java -jar snpEff.jar build -genbank -v tai_forest_ebolavirus
+java -jar snpEff.jar build -genbank -v zaire_ebolavirus
+java -jar snpEff.jar build -genbank -v sars_cov_1
+java -jar snpEff.jar build -genbank -v new_ncbi_sars_cov_2
