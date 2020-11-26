@@ -5,12 +5,12 @@ import urllib
 import uuid
 
 import flask
-from flask import Flask, abort, redirect, request
+from flask import Flask, abort, redirect, request, render_template, send_from_directory
 from flask_executor import Executor
 from flask_cors import CORS
 from flask_mail import Mail, Message
 
-from support import setupMailConfig
+from support import setupMailConfig, computeVCF
 
 import consensus_analysis as ca
 
@@ -33,6 +33,10 @@ with app.app_context():
     logger = flask.current_app.logger
     STATUS = dict()
     JSON = dict()
+
+    VCF = dict()
+
+    VCF_TEMP_DIR = "tmp_vcf/"
 
     setupMailConfig(app, CONF)
     mail = Mail(app)
@@ -68,6 +72,42 @@ def setError(id, errorMessage) :
 
 def setParsedSequences(id, num) :
     STATUS[id]["parsedSequences"] = num
+
+
+# Handle files upload and start the computation
+@app.route(CONF["base_url"] + '/api/vcf-download/', methods=['POST'])
+def getVCF():
+    variants_json = request.form.get('json')
+    variants = json.loads(variants_json)
+
+    id = generateUUID()
+    logger.debug(id)
+
+    JSON[id] = {
+        "ready": False,
+        "failed": False,
+    }
+
+    def async_function():
+        try:
+            # do computation here
+            computeVCF(variants, VCF_TEMP_DIR, id)
+
+            JSON[id] = {
+                "ready": True
+            }
+        except Exception as e:
+            JSON[id] = {
+                "ready": False,
+                "failed": True,
+                "failedMessage": "VCF could not be generated."
+            }
+            logger.error("Async error", e)
+            raise e
+
+    executor.submit(async_function)
+
+    return json.dumps({"id": id})
 
 # Handle files upload and start the computation
 @app.route(CONF["base_url"] + '/api/upload/', methods=['POST'])
@@ -154,6 +194,36 @@ def getStatus(id):
         return STATUS[id]
     else:
         abort(404)
+
+# Get the status of a computation
+@app.route(CONF["base_url"] + '/api/vcf-download/status/<string:id>', methods=['GET'])
+def getStatusVCF(id):
+    logger.debug("asking vcf status")
+    logger.debug(id)
+    if id in JSON:
+        return JSON[id]
+    else:
+        abort(404)
+
+# Download VCF file
+@app.route(CONF["base_url"] + '/api/vcf-download/<string:id>')
+def downloadVCF(id):
+    logger.debug("asking download")
+    logger.debug(id)
+
+    path = VCF_TEMP_DIR+id+".vcf.gz"
+
+    def generate():
+        with open(path) as f:
+            yield from f
+
+        os.remove(path)
+
+    r = app.response_class(generate())
+    r.headers.set('Content-Disposition', 'attachment', filename=id+".vcf.gz")
+    return r
+    #return send_from_directory(VCF_TEMP_DIR, id+".vcf.gz", as_attachment=True)
+
 
 # Send a notification about the completion of a computation if an email was provided
 def sendEmail(id, success):

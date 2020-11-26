@@ -1,0 +1,51 @@
+{
+    "taxonID": "EXAMPLE",
+    "sequences" : {
+        "MT077125.1": {
+
+            "variants": {
+
+                "N" : {
+                    "variants": [
+                        [
+                            1, 
+                            "a", 
+                            "-", 
+                            "DEL", 
+                            [
+                                [
+                                    "intergenic_region", 
+                                    "MODIFIER", 
+                                    "CHR_START-ORF1ab"
+                                ], 
+                                [
+                                    "upstream_gene_variant", 
+                                    "MODIFIER", 
+                                    "ORF1ab"
+                                ]
+                            ]
+                        ], 
+                        [
+                            2, 
+                            "t", 
+                            "-", 
+                            "DEL", 
+                            [
+                                [
+                                    "intergenic_region", 
+                                    "MODIFIER", 
+                                    "CHR_START-ORF1ab"
+                                ], 
+                                [
+                                    "upstream_gene_variant", 
+                                    "MODIFIER", 
+                                    "ORF1ab"
+                                ]
+                            ]
+                        ]
+                    ]
+                }
+            } 
+        }
+    }
+}

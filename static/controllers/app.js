@@ -33,7 +33,10 @@ app.controller('main_ctrl', function($scope, $http, $timeout, $location, $routeP
     }
 
     $scope.UPLOAD_API = "api/upload/";
+    $scope.VCF_API = "api/vcf-download/";
     $scope.POLL_API = "api/upload/status/";
+    $scope.POLL_VCF_API = "api/vcf-download/status/";
+
 
     $scope.POLLING_TIMEOUT = 3000;
 
@@ -181,6 +184,110 @@ app.controller('main_ctrl', function($scope, $http, $timeout, $location, $routeP
                 metaReader.readAsText(metaFile.files[0]);
             }
             fastaReader.readAsText(fastaFile.files[0]);
+        }
+    }
+
+
+    $scope.submitVCF = function() {
+
+        console.log("submit VCF");
+
+        let jsonFile = document.getElementById('json');
+
+        if (jsonFile.files.length === 0)
+            bootbox.alert("Please, select a JSON");
+
+        else {
+
+            let jsonReader = new FileReader();
+
+            jsonReader.onloadend = function (e_json) {
+
+                console.log("JSON was read.")
+
+                let jsonText = e_json.target.result;
+
+                let requestBody = {
+                    json: jsonText
+                }
+
+                $http({
+                    method: 'POST',
+                    data: $.param(requestBody),
+                    headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                    url: $scope.VCF_API
+                }).then(
+                    function success(response) {
+
+                        var id = response.data.id;
+
+                        // Call the API
+                        $scope.pollVCF = function (id) {
+                            $http({
+                                method: 'GET', url: $scope.POLL_VCF_API + id
+                            }).then(
+                                function success(response) {
+                                    console.log(response);
+                                    if (response.data.ready == true) {
+                                        console.log("downloading");
+
+
+                                        $http.get($scope.VCF_API+id, {responseType:'arraybuffer'
+                                        })
+                                            .then(function (response) {
+
+                                                var saveBlob = (function () {
+                                                    var a = document.createElement("a");
+                                                    document.body.appendChild(a);
+                                                    a.style = "display: none";
+                                                    return function (blob, fileName) {
+                                                        var url = window.URL.createObjectURL(blob);
+                                                        a.href = url;
+                                                        a.download = fileName;
+                                                        a.click();
+                                                        window.URL.revokeObjectURL(url);
+                                                    };
+                                                }());
+
+                                                var file = new Blob([response], {type: 'application/gzip'});
+
+                                                saveBlob(file, "variants.vcf.gz");
+
+
+
+                                            });
+                                    } else if (response.data.failed) {
+                                        console.log("error");
+                                        bootbox.alert("Error: " + response.data.failedMessage);
+                                    } else {
+                                        console.log("polling");
+                                        $timeout($scope.pollVCF, $scope.POLLING_TIMEOUT, true, id);
+                                    }
+                                },
+                                function error(response) {
+
+                                    var message = "The result for this computation is no more available.";
+                                    bootbox.confirm(message, function (result) {
+                                    });
+
+                                });
+                        }
+                        $scope.pollVCF(id);
+
+
+
+
+                    }
+                    ,
+                    function error(response) {
+                        bootbox.alert("An error occurred. Response status: " + response.statusText + ".");
+                    }
+                );
+
+
+            }
+
+            jsonReader.readAsText(jsonFile.files[0]);
         }
     }
 
