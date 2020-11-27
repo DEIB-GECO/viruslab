@@ -29,6 +29,9 @@ with open('config.json') as json_file:
 app = Flask(__name__,static_url_path=CONF["base_url"] + '', static_folder='./static')
 cors = CORS(app, resources={r"/virusurf-eit/api/*": {"origins": "*"}})
 
+app.config['EXECUTOR_PROPAGATE_EXCEPTIONS'] = True
+app.config['EXECUTOR_MAX_WORKERS'] = 10
+
 executor = Executor(app)
 
 with app.app_context():
