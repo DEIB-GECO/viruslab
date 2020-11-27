@@ -1,5 +1,5 @@
 # output of vcf_generator.py
-./temp/
+/temp/
 ./temp/*
 # example json files used for testing
 *.json
