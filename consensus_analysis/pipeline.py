@@ -571,7 +571,6 @@ def pipeline(sequences, metadata, species = 'sars_cov_2'):
     with open(product_json_file) as json_file:
         product_json = json.load(json_file)
 
-    print(product_json.keys())
     #initialize json.results
     result_json = {
         "sequencesCount": len(sequences.keys()),
@@ -607,6 +606,7 @@ def pipeline(sequences, metadata, species = 'sars_cov_2'):
             json_anns[prot] = aamut
         sequence_json = {"id": sid,
                          "meta": metadata[sid],
+                         "closestSequences":[],
                          #"closestSequences": [[mid, blast_meta_dict[mid]] for mid in list(blast_matching_sids[sid])],
                          "variants": {"N": {"schema": ["position",
                                                       "from",
@@ -621,7 +621,7 @@ def pipeline(sequences, metadata, species = 'sars_cov_2'):
 
         sequences_json[sid] = sequence_json
 
-    result_json["sequences"] = sequence_json
+    result_json["sequences"] = sequences_json
 
     output_json = {"ready": True,
                    "result": result_json}
