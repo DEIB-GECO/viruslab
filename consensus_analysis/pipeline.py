@@ -555,9 +555,13 @@ def pipeline(sequences, metadata, species = 'sars_cov_2'):
     blast_meta_file,\
     product_json_file = parameters[species]
 
+    print("AAAAA get param")
+
     #read reference FASTA of the species
     reference_sequence = SeqIO.parse(open(ref_fasta_file_name),
                                      'fasta').__next__().seq
+
+    print("BBB load sequence")
 
     ## load blast metadata
     blast_meta_dict = {}
@@ -626,6 +630,7 @@ def pipeline(sequences, metadata, species = 'sars_cov_2'):
     output_json = {"ready": True,
                    "result": result_json}
 
+    print("CCCCCC finish with analysis")
     return output_json
 
 
