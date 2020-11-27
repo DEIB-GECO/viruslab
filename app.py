@@ -59,7 +59,7 @@ def generateUUID():
 
 # Set the JSON result of a computation and notify the user
 def setJSON(id, pythonDictionary):
-    JSON[id] = json.dumps(pythonDictionary);
+    JSON[id] = json.dumps(pythonDictionary, cls=ca.NpEncoder);
     STATUS[id]["ready"] = True;
 
     sendEmail(id, True)
@@ -163,8 +163,8 @@ def process(id, fastaText, metaText):
 
         pipeline_json = ca.pipeline(sequences, metadata)
 
-        with open("result_test.json", "w") as f:
-            f.write(pipeline_json)
+        #with open("result_test.json", "w") as f:
+        #    f.write(pipeline_json)
 
         setJSON(id, pipeline_json)
     except ca.InputException as e:

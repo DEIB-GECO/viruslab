@@ -626,6 +626,6 @@ def pipeline(sequences, metadata, species = 'sars_cov_2'):
     output_json = {"ready": True,
                    "result": result_json}
 
-    return json.dumps(output_json, cls=NpEncoder)
+    return output_json
 
 
