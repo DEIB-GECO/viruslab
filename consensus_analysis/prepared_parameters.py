@@ -12,6 +12,11 @@ parameters = {
     'bundibugyo_ebolavirus': (f'.{sep}annotations{sep}bundibugyo_ebolavirus.tsv', f'.{sep}annotations{sep}dengue_virus_1.tsv','NC_014373', 'bundibugyo_ebolavirus'),
     'bombali_ebolavirus': (f'.{sep}annotations{sep}bombali_ebolavirus.tsv', f'.{sep}annotations{sep}dengue_virus_1.tsv','NC_039345', 'bombali_ebolavirus'),
     'tai_forest_ebolavirus': (f'.{sep}annotations{sep}tai_forest_ebolavirus.tsv',f'.{sep}annotations{sep}dengue_virus_1.tsv', 'NC_014372', 'tai_forest_ebolavirus'),
-    'sars_cov_2': (f'.{sep}consensus_analysis{sep}annotations{sep}sars_cov_2.fa', f'.{sep}annotations{sep}sars_cov_2.tsv', 'NC_045512', 'new_ncbi_sars_cov_2'),
+    'sars_cov_2': (f'.{sep}consensus_analysis{sep}annotations{sep}sars_cov_2.fa',
+                   f'.{sep}annotation_files{sep}new_ncbi_sars_cov_2.tsv',
+                   'NC_045512',
+                   'new_ncbi_sars_cov_2',
+                   f'blast_db{sep}new_ncbi_sars_cov_2.meta',
+                   f'.{sep}annotation_files{sep}sars_cov_2_products.json'),
     'sars_cov_1': (f'.{sep}annotations{sep}sars_cov_1.tsv', f'.{sep}annotations{sep}dengue_virus_1.tsv','NC_004718', 'sars_cov_1')
 }

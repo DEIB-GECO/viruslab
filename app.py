@@ -161,7 +161,12 @@ def process(id, fastaText, metaText):
         sequences, metadata = ca.parse_inputs(fastaText, metaText)
         setParsedSequences(id, len(metadata.keys()))
 
-        ca.pipeline(sequences, metadata)
+        pipeline_json = ca.pipeline(sequences, metadata)
+
+        with open("result_test.json", "w") as f:
+            f.write(pipeline_json)
+
+        setJSON(id, pipeline_json)
     except ca.InputException as e:
         print(f"\n\n{e.msg}\n\n")
         setError(id, e.msg)

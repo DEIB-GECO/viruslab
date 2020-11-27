@@ -1,15 +1,255 @@
 from Bio import SeqIO
-from Bio import Align
+from Bio import Align, Seq, pairwise2
+from Bio.Data import CodonTable
 from io import StringIO
 import sys
 import numpy as np
 import os
 from .prepared_parameters import parameters
-#from pipeline_nuc_variants__annotations__aa import \
-#    filter_nuc_variants, \
-#    call_annotation_variant, \
-#from data_sources.ncbi_any_virus.ncbi_importer import prepared_parameters
-#import json
+import json
+
+
+class NpEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.integer):
+            return int(obj)
+        elif isinstance(obj, np.floating):
+            return float(obj)
+        elif isinstance(obj, np.ndarray):
+            return obj.tolist()
+        else:
+            return super(NpEncoder, self).default(obj)
+
+def get_metadata_schema(metadata):
+    schema = []
+    for name in metadata[list(metadata.keys())[0]].keys():
+        metadatum_dict = {
+            "name" : name,
+            "forPopulationDescription": True,
+            "forFiltering": True,
+            "type": "categorical"
+        }
+        schema.append(metadatum_dict)
+    return schema
+
+def extract_nuc_mut_for_json(mut):
+    return [mut["start_original"],
+            mut["sequence_original"],
+            mut['sequence_alternative'],
+            mut["variant_type"],
+            mut["annotations"]]
+
+def filter_ann_and_variants(annotations_w_aa_variants):
+    """
+    Transforms SUBs and DELs so that they're all of length 1
+    Removes
+    - substitutions whose alternative sequence is X (aligner error)
+    - annotations and variants located in proteins ORF1a/ORF1ab
+    """
+    new_annotations_w_aa_variants = []
+    for gene_name, product, protein_id, feature_type, start, stop, nuc_seq, amino_acid_seq, aa_variants in annotations_w_aa_variants:
+        # remove annotations and variants on proteins ORf1a/ab
+        if not product.startswith('ORF1a'):
+            # filter variants
+            new_aa_variants = []
+            for gene, protein_name, protein_code, mutpos, ref, alt, mut_type in aa_variants:
+                # transform variants
+                if mut_type == 'DEL':
+                    for i in range(len(ref)):
+                        new_mutpos = mutpos + i if mutpos is not None else None
+                        new_aa_variants.append(
+                            (gene, protein_name, protein_code, new_mutpos, ref[i], '-', mut_type))
+                elif mut_type == 'SUB':
+                    for i in range(len(ref)):
+                        if alt[i] == 'X':
+                            continue
+                        else:
+                            new_mutpos = mutpos + i if mutpos is not None else None
+                            new_aa_variants.append(
+                                (gene, protein_name, protein_code, new_mutpos, ref[i], alt[i], mut_type))
+                else:
+                    new_aa_variants.append((gene, protein_name, protein_code, mutpos, ref, alt, mut_type))
+            # output only annotations with at least one variant
+            if len(new_aa_variants) > 0:
+                new_annotations_w_aa_variants.append((
+                    gene_name, product, protein_id, feature_type, start, stop, nuc_seq, amino_acid_seq,
+                    new_aa_variants
+                ))
+    return new_annotations_w_aa_variants
+
+def call_annotation_variant(annotation_file, ref_aligned, seq_aligned, ref_positions, seq_positions, sequence_id = 666):
+    table = CodonTable.ambiguous_dna_by_id[1]
+
+    list_annotations = []
+
+    class Ann:
+        def __init__(self, ann_type, ann_pos, gene, protein, protein_id, aa_seq):
+            self.ann_type = ann_type
+            self.ann_pos = ann_pos
+            self.gene = gene
+            self.protein = protein
+            self.protein_id = protein_id
+            self.aa_seq = aa_seq
+
+    def parse_pos(l):
+        return [(int(pos.strip().split(",")[0]), int(pos.strip().split(",")[1])) for pos in l.strip().split(";")]
+
+    ref_annotations = []
+    with open(annotation_file) as f:
+        for line in f:
+            s = line.strip().split("\t")
+            ann_type = s[2]
+            ann_pos = parse_pos(s[3])
+            gene = None if s[4] == "." else s[4]
+            protein = None if s[5] == "." else s[5]
+            protein_id = None if s[6] == "." else s[6]
+            aa_seq = None if s[7] == "." else s[7]
+            ref_annotations.append(Ann(ann_type, ann_pos, gene, protein, protein_id, aa_seq))
+
+    for annotation in ref_annotations:
+
+        gene = annotation.gene
+        protein = annotation.protein
+        protein_id = annotation.protein_id
+        atype = annotation.ann_type
+        nuc_start = annotation.ann_pos[0][0]
+        nuc_stop = annotation.ann_pos[-1][1]
+
+        nuc_seq = "".join(
+            [x[1] for x in zip(ref_positions, seq_aligned) if nuc_start <= x[0] and nuc_stop >= x[0]]).replace("-", "")
+
+        #if nuc_seq is not None and aa_seq is None:
+        #    logger.warning('nuc_seq is not None and aa_seq is None (' + gene + ',' + protein + ')')
+
+
+        list_mutations = []
+        if annotation.ann_type == 'mature_protein_region' or annotation.ann_type == 'CDS':
+            dna_ref = ''
+            for (start, stop) in annotation.ann_pos:
+                dna_ref += "".join([x[1] for x in zip(ref_positions, seq_aligned) if start <= x[0] and stop >= x[0]]).replace("-", "")
+
+            if len(dna_ref)%3 == 0 and len(dna_ref) > 0:
+                aa_seq = Seq._translate_str(dna_ref, table, cds=False).replace("*", "")
+
+                alignment_aa = pairwise2.align.globalms(annotation.aa_seq, aa_seq, 3, -1, -3, -1)
+
+                try:
+                    ref_aligned_aa = alignment_aa[0][0]
+                    seq_aligned_aa = alignment_aa[0][1]
+                except IndexError:
+                    continue
+
+                ref_positions_aa = np.zeros(len(seq_aligned_aa), dtype=int)
+                pos = 0
+                for i in range(len(ref_aligned_aa)):
+                    if ref_aligned_aa[i] != '-':
+                        pos += 1
+                    ref_positions_aa[i] = pos
+
+                seq_positions_aa = np.zeros(len(seq_aligned_aa), dtype=int)
+                pos = 0
+                for i in range(len(ref_aligned_aa)):
+                    if seq_aligned_aa[i] != '-':
+                        pos += 1
+                    seq_positions_aa[i] = pos
+
+
+
+                list_mutations = []
+
+                ins_open = False
+                ins_len = 0
+                ins_pos = None
+                ins_seq = ""
+                for i in range(len(ref_aligned_aa)):
+                    if ref_aligned_aa[i] == '-':
+                        ins_open = True
+                        ins_len += 1
+                        ins_pos = ref_positions_aa[i]
+                        ins_seq += seq_aligned_aa[i]
+                    else:
+                        if ins_open:
+                            v = (gene, protein, protein_id, ins_pos, "-" * ins_len, ins_seq, "INS")
+                            list_mutations.append(v)
+
+                            ins_open = False
+                            ins_len = 0
+                            ins_pos = None
+                            ins_seq = ""
+                if ins_open:
+                    v = (gene, protein, protein_id, ins_pos, "-" * ins_len, ins_seq, "INS")
+                    list_mutations.append(v)
+
+                del_open = False
+                del_len = 0
+                del_pos = None
+                del_seq = ""
+                for i in range(len(ref_aligned_aa)):
+                    if seq_aligned_aa[i] == '-':
+                        if not del_open:
+                            del_pos = ref_positions_aa[i]
+                        del_pos_seq = seq_positions_aa[i]
+                        del_open = True
+                        del_len += 1
+                        del_seq += ref_aligned_aa[i]
+                    else:
+                        if del_open:
+                            v = (gene, protein, protein_id, del_pos, del_seq, "-" * del_len, "DEL")
+                            list_mutations.append(v)
+
+                            del_open = False
+                            del_len = 0
+                            del_pos = None
+                            del_pos_seq = None
+                            del_seq = ""
+
+                if del_open:
+                    v = (gene, protein, protein_id, del_pos, del_seq, "-" * del_len, "DEL")
+                    list_mutations.append(v)
+
+                mut_open = False
+                mut_len = 0
+                mut_pos = None
+                mut_pos_seq = None
+                mut_seq_original = ""
+                mut_seq_mutated = ""
+                for i in range(len(ref_aligned_aa)):
+                    if ref_aligned_aa[i] != '-' and seq_aligned_aa[i] != '-' and ref_aligned_aa[i] != seq_aligned_aa[i]:
+                        if not mut_open:
+                            mut_pos = ref_positions_aa[i]
+                            mut_pos_seq = seq_positions_aa[i]
+                        mut_open = True
+                        mut_len += 1
+                        mut_seq_original += ref_aligned_aa[i]
+                        mut_seq_mutated += seq_aligned_aa[i]
+                    else:
+                        if mut_open:
+                            v = (gene, protein, protein_id, mut_pos, mut_seq_original, mut_seq_mutated, "SUB")
+                            list_mutations.append(v)
+
+                            mut_open = False
+                            mut_len = 0
+                            mut_pos = None
+                            mut_pos_seq = None
+                            mut_seq_original = ""
+                            mut_seq_mutated = ""
+
+                if mut_open:
+                    v = (gene, protein, protein_id, mut_pos, mut_seq_original, mut_seq_mutated, "SUB")
+                    list_mutations.append(v)
+
+                list_annotations.append(
+                    (gene, protein, protein_id, atype, nuc_start, nuc_stop, nuc_seq, aa_seq, list_mutations))
+
+            elif len(dna_ref) == 0:
+                list_annotations.append(
+                    (gene, protein, protein_id, atype, nuc_start, nuc_stop, None, None, []))
+
+            else:
+                list_annotations.append(
+                    (gene, protein, protein_id, atype, nuc_start, nuc_stop, nuc_seq, None, []))
+
+    return list_annotations
 
 def filter_nuc_variants(nuc_variants):
     """
@@ -232,7 +472,6 @@ def call_nucleotide_variants(sequence_id, reference, sequence, ref_aligned, seq_
         os.remove("./tmp_snpeff/{}.vcf".format(sequence_id))
     except:
        pass
-
     return filter_nuc_variants(parse_annotated_variants(annotated_variants))
 
 def sequence_aligner(sequence_id, reference, sequence, chr_name, snpeff_database_name, annotation_file):
@@ -275,16 +514,16 @@ def sequence_aligner(sequence_id, reference, sequence, chr_name, snpeff_database
                                                   snpeff_database_name
                                                   )
 
-    # annotations = filter_ann_and_variants(
-    #     call_annotation_variant(annotation_file,
-    #                             ref_aligned,
-    #                             seq_aligned,
-    #                             ref_positions,
-    #                             seq_positions
-    #                             )
-    # )
+    annotations = filter_ann_and_variants(
+        call_annotation_variant(annotation_file,
+                                ref_aligned,
+                                seq_aligned,
+                                ref_positions,
+                                seq_positions
+                                )
+    )
 
-    # return annotated_variants, annotations
+    return annotated_variants, annotations
 
 def parse_inputs(input_fasta, input_metadata):
     fasta_sequences = SeqIO.parse(StringIO(input_fasta), 'fasta')
@@ -309,19 +548,84 @@ def parse_inputs(input_fasta, input_metadata):
     return sequences, metadata
 
 def pipeline(sequences, metadata, species = 'sars_cov_2'):
-    ref_fasta_file_name,annotation_file_name,chr_name,snpeff_db_name = parameters[species]
+    ref_fasta_file_name,\
+    annotation_file_name,\
+    chr_name,\
+    snpeff_db_name,\
+    blast_meta_file,\
+    product_json_file = parameters[species]
 
     #read reference FASTA of the species
     reference_sequence = SeqIO.parse(open(ref_fasta_file_name),
                                      'fasta').__next__().seq
 
-    for sid, sequence in sequences.items():
+    ## load blast metadata
+    blast_meta_dict = {}
+    with open(blast_meta_file) as f:
+        header = f.readline().strip().split("\t")
+        for line in f:
+            s = line.strip().split("\t")
+            blast_meta_dict[s[0]] = {a: v for a, v in zip(header[1:0], s[1:0])}
 
-        sequence_aligner(sid,
-                         reference_sequence,
-                         sequence,
-                         chr_name,
-                         snpeff_db_name,
-                         annotation_file_name)
+    #read pruduct json
+    with open(product_json_file) as json_file:
+        product_json = json.load(json_file)
+
+    print(product_json.keys())
+    #initialize json.results
+    result_json = {
+        "sequencesCount": len(sequences.keys()),
+        "chrom": chr_name,
+        "referenceSequence": str(reference_sequence),
+        "schema": get_metadata_schema(metadata),
+        "products": product_json['products']
+    }
+    annotated_variants = {}
+    annotations = {}
+    blast_matching_sids = {}
+
+    for sid, sequence in sequences.items():
+        print("Analizing sequence: {}".format(sid))
+        annotated_variants[sid], annotations[sid] = sequence_aligner(sid,
+                                                                     reference_sequence,
+                                                                     sequence,
+                                                                     chr_name,
+                                                                     snpeff_db_name,
+                                                                     annotation_file_name)
+
+    sequences_json = {}
+    for sid in sequences.keys():
+        json_muts_nc = []
+        for mut in annotated_variants[sid]:
+            json_mut_nc = extract_nuc_mut_for_json(mut)
+            json_muts_nc.append(json_mut_nc)
+
+        json_anns = {}
+        for ann in annotations[sid]:
+            prot = ann[1]
+            aamut = [[x[3], x[4], x[5], x[6]] for x in ann[-1]]
+            json_anns[prot] = aamut
+        sequence_json = {"id": sid,
+                         "meta": metadata[sid],
+                         #"closestSequences": [[mid, blast_meta_dict[mid]] for mid in list(blast_matching_sids[sid])],
+                         "variants": {"N": {"schema": ["position",
+                                                      "from",
+                                                      "to",
+                                                      "type",
+                                                      ["effect", "putative_impact", "gene"]],
+                                            "variants": json_muts_nc},
+                                      "A": {"schema": ["position", "from", "to", "type"],
+                                            "variants": json_anns}
+                                      },
+                         "sequence": str(sequences[sid])}
+
+        sequences_json[sid] = sequence_json
+
+    result_json["sequences"] = sequence_json
+
+    output_json = {"ready": True,
+                   "result": result_json}
+
+    return json.dumps(output_json, cls=NpEncoder)
 
 
