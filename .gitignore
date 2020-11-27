@@ -132,3 +132,7 @@ dmypy.json
 
 .idea
 .idea/workspace.xml
+
+# SnpEff automatically generated files
+snpEff_genes.txt
+snpEff_summary.html

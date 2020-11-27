@@ -1,4 +1,5 @@
 import time
+from vcf_downloads.vcf_generator import save_compressed_vcf_from_json
 
 
 def setupMailConfig(app, CONF):
@@ -11,11 +12,8 @@ def setupMailConfig(app, CONF):
 
 
 def computeVCF(data, folder, id):
-    # save in: folder + id + ".vcf.gz"
-
-
-    # Example computation :
-    time.sleep(5);
-    f = open(folder + id + ".vcf.gz", "w")
+    file_path = folder + id + ".vcf.gz"
+    save_compressed_vcf_from_json(data, file_path)
+    f = open(file_path, "w")
     f.write("file containing VCF - request id " + id)
     f.close()
