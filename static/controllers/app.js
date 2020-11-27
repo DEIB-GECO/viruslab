@@ -249,7 +249,7 @@ app.controller('main_ctrl', function($scope, $http, $timeout, $location, $routeP
                                                     };
                                                 }());
 
-                                                var file = new Blob([response], {type: 'application/gzip'});
+                                                var file = new Blob([response.data] );
 
                                                 saveBlob(file, "variants.vcf.gz");
 

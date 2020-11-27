@@ -14,6 +14,3 @@ def setupMailConfig(app, CONF):
 def computeVCF(data, folder, id):
     file_path = folder + id + ".vcf.gz"
     save_compressed_vcf_from_json(data, file_path)
-    f = open(file_path, "w")
-    f.write("file containing VCF - request id " + id)
-    f.close()

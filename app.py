@@ -1,11 +1,13 @@
+import gzip
 import json
 import os
 import time
 import urllib
 import uuid
+from io import BytesIO
 
 import flask
-from flask import Flask, abort, redirect, request, render_template, send_from_directory
+from flask import Flask, abort, redirect, request, render_template, send_from_directory, send_file
 from flask_executor import Executor
 from flask_cors import CORS
 from flask_mail import Mail, Message
@@ -213,16 +215,13 @@ def downloadVCF(id):
 
     path = VCF_TEMP_DIR+id+".vcf.gz"
 
-    def generate():
-        with open(path) as f:
-            yield from f
+    memory_file = BytesIO()
 
-        os.remove(path)
+    with open(path, 'rb') as file:
+        memory_file.write(file.read())
+        memory_file.seek(0)
 
-    r = app.response_class(generate())
-    r.headers.set('Content-Disposition', 'attachment', filename=id+".vcf.gz")
-    return r
-    #return send_from_directory(VCF_TEMP_DIR, id+".vcf.gz", as_attachment=True)
+        return send_file(memory_file, attachment_filename='variants.vcf.gz', as_attachment=True, mimetype="application/x-compressed")
 
 
 # Send a notification about the completion of a computation if an email was provided
