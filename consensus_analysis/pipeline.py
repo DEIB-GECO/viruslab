@@ -555,7 +555,8 @@ def pipeline(sequences, metadata, pid, species = 'sars_cov_2'):
     chr_name,\
     snpeff_db_name,\
     blast_meta_file,\
-    product_json_file = parameters[species]
+    product_json_file, \
+    blast_db_name = parameters[species]
 
 
     print(f'#\n#\n#Pipeline: {"load parameters"}\n#\n#')
@@ -565,6 +566,14 @@ def pipeline(sequences, metadata, pid, species = 'sars_cov_2'):
                                      'fasta').__next__().seq
 
     print(f'#\n#\n#Pipeline: {"load reference"}\n#\n#')
+
+    ## load blast metadata
+    blast_meta_dict = {}
+    with open(blast_meta_file) as f:
+        header = f.readline().strip().split("\t")
+        for line in f:
+            s = line.strip().split("\t")
+            blast_meta_dict[s[0]] = {a: v for a, v in zip(header[1:], s[1:])}
 
     ## Call Pangolin for lineage assignement
     pangolin_fasta = f"pangolin_tmp/pango_{pid}.fast"
@@ -581,18 +590,32 @@ def pipeline(sequences, metadata, pid, species = 'sars_cov_2'):
             if status != "passed_qc":
                 lineage = "unknown"
             metadata[sid]['lineage'] = lineage
-    os.remove(pangolin_fasta)
     os.remove("pangolin_tmp/"+ pangolin_output)
 
     print(f'#\n#\n#Pipeline: {"Pangolin executed"}\n#\n#')
 
-    ## load blast metadata
-    blast_meta_dict = {}
-    with open(blast_meta_file) as f:
-        header = f.readline().strip().split("\t")
+    #call for blast
+    blast_out_file = f'{pid}.blast'
+    os.system(f'blastn -query {pangolin_fasta}  \
+    -db blast_db/{blast_db_name} \
+    -num_alignments 20 \
+    -num_threads 5 \
+    -outfmt "7" \
+    -out {blast_out_file}')
+
+    blast_matching_sids = {}
+    with open(blast_out_file) as f:
         for line in f:
-            s = line.strip().split("\t")
-            blast_meta_dict[s[0]] = {a: v for a, v in zip(header[1:0], s[1:0])}
+            if not line.startswith("#"):
+                s = line.strip().split("\t")
+                query_sid = s[0]
+                matching_sid = s[1]
+                blast_matching_sids[query_sid] = blast_matching_sids.get(query_sid, set())
+                blast_matching_sids[query_sid].add(matching_sid)
+    os.remove(blast_out_file)
+    os.remove(pangolin_fasta)
+
+    print(f'#\n#\n#Pipeline: {"Blast executed"}\n#\n#')
 
     #read product json
     with open(product_json_file) as json_file:
@@ -611,7 +634,6 @@ def pipeline(sequences, metadata, pid, species = 'sars_cov_2'):
 
     annotated_variants = {}
     annotations = {}
-    blast_matching_sids = {}
 
     for sid, sequence in sequences.items():
         print(f'#\n#\n#Pipeline: {"Analizing sequence "} {sid}\n#\n#')
@@ -635,8 +657,7 @@ def pipeline(sequences, metadata, pid, species = 'sars_cov_2'):
             json_anns[prot] = aamut
         sequence_json = {"id": sid,
                          "meta": metadata[sid],
-                         "closestSequences":[],
-                         #"closestSequences": [[mid, blast_meta_dict[mid]] for mid in list(blast_matching_sids[sid])],
+                         "closestSequences": [[mid, blast_meta_dict[mid]] for mid in list(blast_matching_sids[sid])],
                          "variants": {"N": {"schema": ["position",
                                                       "from",
                                                       "to",

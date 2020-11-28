@@ -17,6 +17,7 @@ parameters = {
                    'NC_045512',
                    'new_ncbi_sars_cov_2',
                    f'blast_db{sep}new_ncbi_sars_cov_2.meta',
-                   f'.{sep}annotation_files{sep}sars_cov_2_products.json'),
+                   f'.{sep}annotation_files{sep}sars_cov_2_products.json',
+                   'new_ncbi_sars_cov_2'),
     'sars_cov_1': (f'.{sep}annotations{sep}sars_cov_1.tsv', f'.{sep}annotations{sep}dengue_virus_1.tsv','NC_004718', 'sars_cov_1')
 }

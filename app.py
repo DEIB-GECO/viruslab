@@ -167,7 +167,7 @@ def process(id, fastaText, metaText):
         pipeline_json = ca.pipeline(sequences, metadata, id)
 
         #with open("result_test.json", "w") as f:
-        #    f.write(pipeline_json)
+        #    f.write(json.dumps(pipeline_json, cls=ca.NpEncoder))
 
         setJSON(id, pipeline_json)
     except ca.InputException as e:
