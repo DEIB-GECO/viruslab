@@ -486,7 +486,7 @@ def sequence_aligner(sequence_id, reference, sequence, chr_name, snpeff_database
     alignment = str(alignments[0]).strip().split('\n')
     ref_aligned = alignment[0]
     seq_aligned = alignment[2]
-
+    print(f'#\n#\n#Pipeline: {"Alignment done"} \n#\n#')
     ref_positions = np.zeros(len(seq_aligned), dtype=int)
 
     pos = 0
@@ -513,6 +513,7 @@ def sequence_aligner(sequence_id, reference, sequence, chr_name, snpeff_database
                                                   chr_name,
                                                   snpeff_database_name
                                                   )
+    print(f'#\n#\n#Pipeline: {"Nuc variant called"} \n#\n#')
 
     annotations = filter_ann_and_variants(
         call_annotation_variant(annotation_file,
@@ -522,6 +523,7 @@ def sequence_aligner(sequence_id, reference, sequence, chr_name, snpeff_database
                                 seq_positions
                                 )
     )
+    print(f'#\n#\n#Pipeline: {"AA variant called"} \n#\n#')
 
     return annotated_variants, annotations
 
@@ -555,13 +557,13 @@ def pipeline(sequences, metadata, species = 'sars_cov_2'):
     blast_meta_file,\
     product_json_file = parameters[species]
 
-    print("AAAAA get param")
+    print(f'#\n#\n#Pipeline: {"load parameters"}\n#\n#')
 
     #read reference FASTA of the species
     reference_sequence = SeqIO.parse(open(ref_fasta_file_name),
                                      'fasta').__next__().seq
 
-    print("BBB load sequence")
+    print(f'#\n#\n#Pipeline: {"load reference"}\n#\n#')
 
     ## load blast metadata
     blast_meta_dict = {}
@@ -583,19 +585,21 @@ def pipeline(sequences, metadata, species = 'sars_cov_2'):
         "schema": get_metadata_schema(metadata),
         "products": product_json['products']
     }
+
+    print(f'#\n#\n#Pipeline: {"Initialize json"}\n#\n#')
+
     annotated_variants = {}
     annotations = {}
     blast_matching_sids = {}
 
     for sid, sequence in sequences.items():
-        print("Analizing sequence: {}".format(sid))
+        print(f'#\n#\n#Pipeline: {"Analizing sequence "} {sid}\n#\n#')
         annotated_variants[sid], annotations[sid] = sequence_aligner(sid,
                                                                      reference_sequence,
                                                                      sequence,
                                                                      chr_name,
                                                                      snpeff_db_name,
                                                                      annotation_file_name)
-
     sequences_json = {}
     for sid in sequences.keys():
         json_muts_nc = []
