@@ -164,7 +164,7 @@ def process(id, fastaText, metaText):
         sequences, metadata = ca.parse_inputs(fastaText, metaText)
         setParsedSequences(id, len(metadata.keys()))
 
-        pipeline_json = ca.pipeline(sequences, metadata)
+        pipeline_json = ca.pipeline(sequences, metadata, id)
 
         #with open("result_test.json", "w") as f:
         #    f.write(pipeline_json)

@@ -549,13 +549,14 @@ def parse_inputs(input_fasta, input_metadata):
 
     return sequences, metadata
 
-def pipeline(sequences, metadata, species = 'sars_cov_2'):
+def pipeline(sequences, metadata, pid, species = 'sars_cov_2'):
     ref_fasta_file_name,\
     annotation_file_name,\
     chr_name,\
     snpeff_db_name,\
     blast_meta_file,\
     product_json_file = parameters[species]
+
 
     print(f'#\n#\n#Pipeline: {"load parameters"}\n#\n#')
 
@@ -565,6 +566,26 @@ def pipeline(sequences, metadata, species = 'sars_cov_2'):
 
     print(f'#\n#\n#Pipeline: {"load reference"}\n#\n#')
 
+    ## Call Pangolin for lineage assignement
+    pangolin_fasta = f"pangolin_tmp/pango_{pid}.fast"
+    pangolin_output = f"pangolin_tmp/pango_{pid}.pan"
+    with open(pangolin_fasta, "w") as f:
+        for sid, seq in sequences.items():
+            f.write(f">{sid}\n")
+            f.write(f'{str(seq)}\n')
+    os.system(f"bash pangolin_script.sh {pangolin_fasta} pangolin_tmp {pangolin_output}")
+    with open(pangolin_output) as f:
+        f.readline()
+        for line in f:
+            sid, lineage, _, _, status, _ = tuple(line.strip().split(","))
+            if status != "passed_qc":
+                lineage = "unknown"
+                metadata[sid]['lineage'] = lineage
+    os.remove(pangolin_fasta)
+    os.remove(pangolin_output)
+
+    print(f'#\n#\n#Pipeline: {"Pangolin executed"}\n#\n#')
+
     ## load blast metadata
     blast_meta_dict = {}
     with open(blast_meta_file) as f:
@@ -573,7 +594,7 @@ def pipeline(sequences, metadata, species = 'sars_cov_2'):
             s = line.strip().split("\t")
             blast_meta_dict[s[0]] = {a: v for a, v in zip(header[1:0], s[1:0])}
 
-    #read pruduct json
+    #read product json
     with open(product_json_file) as json_file:
         product_json = json.load(json_file)
 
@@ -634,7 +655,6 @@ def pipeline(sequences, metadata, species = 'sars_cov_2'):
     output_json = {"ready": True,
                    "result": result_json}
 
-    print("CCCCCC finish with analysis")
     return output_json
 
 
