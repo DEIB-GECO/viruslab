@@ -568,13 +568,13 @@ def pipeline(sequences, metadata, pid, species = 'sars_cov_2'):
 
     ## Call Pangolin for lineage assignement
     pangolin_fasta = f"pangolin_tmp/pango_{pid}.fast"
-    pangolin_output = f"pangolin_tmp/pango_{pid}.pan"
+    pangolin_output = f"pango_{pid}.pan"
     with open(pangolin_fasta, "w") as f:
         for sid, seq in sequences.items():
             f.write(f">{sid}\n")
             f.write(f'{str(seq)}\n')
     os.system(f"bash pangolin_script.sh {pangolin_fasta} pangolin_tmp {pangolin_output}")
-    with open(pangolin_output) as f:
+    with open("pangolin_tmp/"+ pangolin_output) as f:
         f.readline()
         for line in f:
             sid, lineage, _, _, status, _ = tuple(line.strip().split(","))
@@ -582,7 +582,7 @@ def pipeline(sequences, metadata, pid, species = 'sars_cov_2'):
                 lineage = "unknown"
                 metadata[sid]['lineage'] = lineage
     os.remove(pangolin_fasta)
-    os.remove(pangolin_output)
+    os.remove("pangolin_tmp/"+ pangolin_output)
 
     print(f'#\n#\n#Pipeline: {"Pangolin executed"}\n#\n#')
 
