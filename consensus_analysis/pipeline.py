@@ -580,7 +580,7 @@ def pipeline(sequences, metadata, pid, species = 'sars_cov_2'):
             sid, lineage, _, _, status, _ = tuple(line.strip().split(","))
             if status != "passed_qc":
                 lineage = "unknown"
-                metadata[sid]['lineage'] = lineage
+            metadata[sid]['lineage'] = lineage
     os.remove(pangolin_fasta)
     os.remove("pangolin_tmp/"+ pangolin_output)
 
