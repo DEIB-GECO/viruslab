@@ -667,7 +667,7 @@ def pipeline(sequences, metadata, pid, species = 'sars_cov_2'):
             json_anns[prot] = aamut
         sequence_json = {"id": sid,
                          "meta": metadata[sid],
-                         "closestSequences": [[mid,
+                         "closestSequences": [[mid.matched_id,
                                                {x[0]:x[1] for x in mid.items()+list(blast_meta_dict[mid.matched_id].items())}
                                                ] for mid in list(blast_matching_sids[sid])],
                          "variants": {"N": {"schema": ["position",
