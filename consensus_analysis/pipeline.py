@@ -620,7 +620,7 @@ def pipeline(sequences, metadata, pid, species = 'sars_cov_2'):
                 pident = float(s[2])
                 length = int(s[3])
                 bres = BlastResult(matching_sid, length, pident)
-                blast_matching_sids[query_sid] = blast_matching_sids.get(query_sid, set())
+                blast_matching_sids[query_sid] = blast_matching_sids.get(query_sid, list())
                 blast_matching_sids[query_sid].add(bres)
     os.remove(blast_out_file)
     os.remove(pangolin_fasta)
