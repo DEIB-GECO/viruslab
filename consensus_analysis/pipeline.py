@@ -2,12 +2,19 @@ from Bio import SeqIO
 from Bio import Align, Seq, pairwise2
 from Bio.Data import CodonTable
 from io import StringIO
-import sys
 import numpy as np
 import os
 from .prepared_parameters import parameters
 import json
 
+class BlastResult:
+    def __init__(self, matched_id, lenght, pident):
+        self.matched_id = matched_id
+        self.lenght = lenght
+        self.pident = pident
+
+    def items(self):
+        return [("lenght", self.lenght), ("Percentage of identical matches", self.pident)]
 
 class NpEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -610,8 +617,11 @@ def pipeline(sequences, metadata, pid, species = 'sars_cov_2'):
                 s = line.strip().split("\t")
                 query_sid = s[0]
                 matching_sid = s[1]
+                pident = float(s[2])
+                length = int(s[3])
+                bres = BlastResult(matching_sid, length, pident)
                 blast_matching_sids[query_sid] = blast_matching_sids.get(query_sid, set())
-                blast_matching_sids[query_sid].add(matching_sid)
+                blast_matching_sids[query_sid].add(bres)
     os.remove(blast_out_file)
     os.remove(pangolin_fasta)
 
@@ -657,7 +667,9 @@ def pipeline(sequences, metadata, pid, species = 'sars_cov_2'):
             json_anns[prot] = aamut
         sequence_json = {"id": sid,
                          "meta": metadata[sid],
-                         "closestSequences": [[mid, blast_meta_dict[mid]] for mid in list(blast_matching_sids[sid])],
+                         "closestSequences": [[mid,
+                                               {x[0]:x[1] for x in mid.items()+list(blast_meta_dict[mid.matched_id].items())}
+                                               ] for mid in list(blast_matching_sids[sid])],
                          "variants": {"N": {"schema": ["position",
                                                       "from",
                                                       "to",
