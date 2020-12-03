@@ -6,6 +6,7 @@ import numpy as np
 import os
 from .prepared_parameters import parameters
 import json
+import datetime
 
 class BlastResult:
     def __init__(self, matched_id, lenght, pident):
@@ -27,6 +28,46 @@ class NpEncoder(json.JSONEncoder):
         else:
             return super(NpEncoder, self).default(obj)
 
+def is_int(n):
+    try:
+        int(n)
+        return True
+    except ValueError:
+        return False
+
+def to_int(n):
+    try:
+        return int(n)
+    except Exception:
+        return None
+
+def is_float(n):
+    try:
+        int(n)
+        return True
+    except ValueError:
+        return False
+
+def to_float(n):
+    try:
+        return float(n)
+    except Exception:
+        return None
+
+def is_date(v):
+    try:
+        datetime.datetime.strptime(v, '%Y-%m-%d')
+        return True
+    except ValueError:
+        return False
+
+def to_date(n):
+    try:
+        return str(datetime.datetime.strptime(n, '%Y-%m-%d').date())
+    except Exception:
+        return None
+
+
 def get_metadata_schema(metadata):
     schema = []
     for name in metadata[list(metadata.keys())[0]].keys():
@@ -34,9 +75,32 @@ def get_metadata_schema(metadata):
             "name" : name,
             "forPopulationDescription": True,
             "forFiltering": True,
-            "type": "categorical"
+            "type": name if name == "lineage" else "categorical"
         }
         schema.append(metadatum_dict)
+
+    for meta in schema:
+        name = meta['name']
+        if name != "lineage":
+            values = [v[name] for a,v in metadata.items()]
+            if all([is_int(x) for x in values if x != ""]):
+                meta['type'] = 'numerical'
+                for sid in metadata:
+                    metadata[sid][name] = to_int(metadata[sid][name])
+            elif all([is_float(x) for x in values if x != ""]):
+                meta['type'] = 'numerical'
+                for sid in metadata:
+                    metadata[sid][name] = to_float(metadata[sid][name])
+            elif all([is_date(x) for x in values if x != ""]):
+                meta['type'] = 'date'
+                for sid in metadata:
+                    metadata[sid][name] = to_float(metadata[sid][name])
+            else:
+                meta['type'] = 'categorical'
+                for sid in metadata:
+                    if metadata[sid][name] == '':
+                        metadata[sid][name] = None
+
     return schema
 
 def extract_nuc_mut_for_json(mut):
@@ -545,7 +609,7 @@ def parse_inputs(input_fasta, input_metadata):
     for line in meta_rows[1:]:
         s = line.strip().split(",")
         sid = s[0]
-        seq_metadata = {a: v for a, v in list(zip(header, s))[1:]}
+        seq_metadata = {a: v.strip() for a, v in list(zip(header, s))[1:]}
         metadata[sid] = seq_metadata
 
     if len(set(metadata.keys()).union(set(sequences.keys()))) > len(set(metadata.keys())):
