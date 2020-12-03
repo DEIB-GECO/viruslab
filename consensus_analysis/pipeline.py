@@ -529,7 +529,7 @@ def sequence_aligner(sequence_id, reference, sequence, chr_name, snpeff_database
 
 def parse_inputs(input_fasta, input_metadata):
     fasta_sequences = SeqIO.parse(StringIO(input_fasta), 'fasta')
-    sequences = {x.id: x.seq for x in fasta_sequences}
+    sequences = {x.id: x.seq.lower() for x in fasta_sequences}
 
     metadata = {}
     meta_rows = input_metadata.strip().split("\n")
@@ -564,8 +564,8 @@ def pipeline(sequences, metadata, pid, species = 'sars_cov_2'):
     #read reference FASTA of the species
     reference_sequence = SeqIO.parse(open(ref_fasta_file_name),
                                      'fasta').__next__().seq
-
-    print(f'#\n#\n#Pipeline: {"load reference"}\n#\n#')
+    reference_sequence = reference_sequence.lower()
+    print(f'#\n#\n#Pipeline: {"loaded reference"}\n#\n#')
 
     ## load blast metadata
     blast_meta_dict = {}
