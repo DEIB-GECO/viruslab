@@ -94,7 +94,7 @@ def get_metadata_schema(metadata):
             elif all([is_date(x) for x in values if x != ""]):
                 meta['type'] = 'date'
                 for sid in metadata:
-                    metadata[sid][name] = to_float(metadata[sid][name])
+                    metadata[sid][name] = to_date(metadata[sid][name])
             else:
                 meta['type'] = 'categorical'
                 for sid in metadata:
@@ -628,7 +628,6 @@ def pipeline(sequences, metadata, pid, species = 'sars_cov_2'):
     blast_meta_file,\
     product_json_file, \
     blast_db_name = parameters[species]
-
 
     print(f'#\n#\n#Pipeline: {"load parameters"}\n#\n#')
 
