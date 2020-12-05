@@ -1,1 +1,1 @@
-# ViruSurf-EIT
+# VirusLab
