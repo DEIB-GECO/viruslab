@@ -40,7 +40,7 @@ app.controller('main_ctrl', function($scope, $http, $timeout, $location, $routeP
 
     $scope.POLLING_TIMEOUT = 3000;
 
-    $scope.MINUTES_PER_SEQ = 2;
+    $scope.MINUTES_PER_SEQ = 0.55;
 
     $scope.getCurrentLocation = function() {
         return  window.location.href;
@@ -62,14 +62,24 @@ app.controller('main_ctrl', function($scope, $http, $timeout, $location, $routeP
                 if("parsedSequences" in response.data)
                     $scope.state.numSequences  = response.data.parsedSequences;
 
+
+                var minutesRequired = $scope.state.numSequences*$scope.MINUTES_PER_SEQ;
+                $scope.maxMinutes = Math.round(minutesRequired+0.5)
                 var startedAt =  parseInt(response.data.startedAt);
                 var elapsed = (new Date().getTime() - startedAt)/1000;
-                var timeTotal= $scope.state.numSequences*$scope.MINUTES_PER_SEQ*60;
+                var timeTotal= minutesRequired*60;
                 var timeleft = parseInt(timeTotal-elapsed);
                 var leftPerc = Math.floor((timeleft/timeTotal)<0?0:(timeleft/timeTotal)*100);
 
-                $("#progressBar").css("width",leftPerc+"%");
-                $("#progressBar").text(leftPerc+"%");
+                var elapsedPerc = 100-leftPerc;
+
+                if(elapsedPerc<=99) {
+                    $("#progressBar").css("width", elapsedPerc + "%");
+                    $("#progressBar").text(elapsedPerc + "%");
+                } else{
+                    $("#progressBar").css("width","99%");
+                    $("#progressBar").text("99%");
+                }
 
 
                 if( response.data.ready == true) {
