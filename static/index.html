@@ -3,34 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="./libs/bootstrap-4/css/bootstrap.min.css">
-    <title>ViruSurf-EIT</title>
+    <title>VirusLab</title>
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Sunflower:wght@300&display=swap" rel="stylesheet">
 </head>
 
 
 <body ng-controller="main_ctrl">
 
 <nav class="navbar navbar-dark bg-dark">
-    <a class="navbar-brand" href="#">ViruSurf-EIT</a>
+    <a class="navbar-brand" href="#" style="font-family: 'Sunflower', sans-serif;">
+        <img src="img/viruslab-logo.png" style="margin-right: 9px;
+padding-bottom: 5px; height: 28px;">VirusLab</a>
 </nav>
 <div class="container">
 
     <div class="col-md-6 offset-md-3 mt-5">
 
         <div ng-if="!state.ready && !state.processing">
-            <img width="70" src='./img/virus.svg'>
-            <br>
-            <h1>Upload your sequences</h1>
+
+
+            <h1> <!--img width="70" src='./img/virus.svg' class="float-left"--> Upload your sequences</h1>
             <p></p>
             <form accept-charset="UTF-8" ng-submit="submit()">
                 <hr>
                 <div class="form-group mt-3">
-                    <label class="mr-2">Choose a <code>FASTA</code> file (sequences):</label>
+                    <label class="mr-2"> <b>Sequences:</b></label>
+                    <ul style="font-size: 0.9em">
+                        <li>provide a multi-FASTA file, where headers are of the form <br> <code>"&gt;[sequence_id]"</code> (e.g., <code>&gt;MW255832.1"</code> and sequences are appended one after the other.</li>
+                    </ul>
+
                     <input type="file" name="fasta" id="fasta" required
                            onchange="angular.element(this).scope().checkFasta()">
                 </div>
 
                 <div class="form-group mt-3">
-                    <label class="mr-2">Choose a <code>CSV</code> file (metadata):</label>
+                    <label class="mr-2"><b>Metadata:</b></label>
+                    <ul style="font-size: 0.9em">
+                        <li>provide a comma-separated-values file (tsv is not supported) where the first column is named "id" and contains the same various <code>[sequence_id]</code> provided in the FASTA file</li>
+                        <li>date fields should be provided in the form <code>yyyy-mm-dd</code></li>
+                        <li>string fields do not support comma as a separator (please use alternatives, e.g., "+", "-", "|", ";" etc.)</li>
+                    </ul>
+
                     <input type="file" name="meta" id="meta" required>
                 </div>
 
@@ -64,7 +79,7 @@
             <br>
             <p>
                 We are processing your sequences. <br>
-                This process could take up to {{ state.numSequences*MINUTES_PER_SEQ }} minutes. <br><br>
+                This process could take up to {{ maxMinutes }} minutes. <br><br>
                 <span ng-if="!(state.email && state.email!='')">
                     Since you didn't provide an email address,  don't close this page until the result is ready or <b>save it in your bookmarks</b>.<br><br>
 
