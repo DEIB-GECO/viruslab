@@ -531,9 +531,9 @@ def call_nucleotide_variants(sequence_id, reference, sequence, ref_aligned, seq_
                                                                                  snpeff_output_file))
 
         try:
-            with open("./tmp_snpeff/{}".format(snpeff_output_file)) as f:
+            with open(snpeff_output_file) as f:
                 annotated_variants = [line for line in f if not line.startswith("#")]
-            os.remove("./tmp_snpeff/{}".format(snpeff_output_file))
+            os.remove(snpeff_output_file)
         except FileNotFoundError:
             annotated_variants = list()
             pass
