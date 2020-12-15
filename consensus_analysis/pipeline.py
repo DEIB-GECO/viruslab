@@ -519,20 +519,21 @@ def call_nucleotide_variants(sequence_id, reference, sequence, ref_aligned, seq_
         v = add_variant(mut_pos, mut_pos_seq, mut_len, mut_seq_original, mut_seq_mutated, "SUB", reference, sequence)
         variants.append(v)
 
-    variant_file = "./tmp_snpeff/{}.vcf".format(sequence_id)
+    variant_file = "./tmp_snpeff/{}.vcf".format(sequence_id.replace("/", ""))
+    snpeff_output_file = "./tmp_snpeff/output_{}.vcf".format(sequence_id.replace("/", ""))
     with open(variant_file, "w") as f:
         for m in variants:
             f.write(m + '\n')
 
     if variants:
-        os.system("java -jar ./tmp_snpeff/snpEff/snpEff.jar  {}  {} > ./tmp_snpeff/output_{}.vcf".format(snpeff_database_name,
-                                                                                                         variant_file,
-                                                                                                         sequence_id))
+        os.system("java -jar ./tmp_snpeff/snpEff/snpEff.jar  {}  {} > {}".format(snpeff_database_name,
+                                                                                 variant_file,
+                                                                                 snpeff_output_file))
 
         try:
-            with open("./tmp_snpeff/output_{}.vcf".format(sequence_id)) as f:
+            with open("./tmp_snpeff/{}".format(snpeff_output_file)) as f:
                 annotated_variants = [line for line in f if not line.startswith("#")]
-            os.remove("./tmp_snpeff/output_{}.vcf".format(sequence_id))
+            os.remove("./tmp_snpeff/{}".format(snpeff_output_file))
         except FileNotFoundError:
             annotated_variants = list()
             pass
@@ -540,7 +541,7 @@ def call_nucleotide_variants(sequence_id, reference, sequence, ref_aligned, seq_
         annotated_variants = list()
 
     try:
-        os.remove("./tmp_snpeff/{}.vcf".format(sequence_id))
+        os.remove(variant_file)
     except:
        pass
     return filter_nuc_variants(parse_annotated_variants(annotated_variants))
