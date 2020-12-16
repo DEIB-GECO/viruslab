@@ -12,10 +12,8 @@
 
 <body ng-controller="main_ctrl">
 
-<nav class="navbar navbar-dark bg-dark">
-    <a class="navbar-brand" href="#" style="font-family: 'Sunflower', sans-serif;">
-        <img src="img/viruslab-logo.png" style="margin-right: 9px;
-padding-bottom: 5px; height: 28px;">VirusLab</a>
+<nav class="navbar"  style="background-color: #009688">
+        <a class="navbar-brand" href="./"><img src="img/viruslab-logo-small.png" height="36px"/></a>
 </nav>
 <div class="container">
 
@@ -109,8 +107,8 @@ padding-bottom: 5px; height: 28px;">VirusLab</a>
             <a class="btn btn-lg" style="background-color: #009688; color:white;"
                target="_blank"
                href="{{state.virusVizAddress}}?appName=ViruSurf-EIT&dataURL={{state.jsonAddress}}&appURL={{getCurrentLocation()}} }}">
-                <img src="img/virusviz-logo-name.png" width="25px">
-                Open in VirusViz
+                <img src="img/viruslab-logo-small.png" width="25px">
+                Visualize the result
             </a>
             <br><br>
             or <a ng-click="reset()" href="javascript:void(0);"> upload new seqeunces.</a>
