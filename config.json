@@ -2,7 +2,7 @@
     "host": "http://127.0.0.1:5000/",
     "debug": "true",
     "base_url": "/virusurf-eit",
-    "virusviz": "http://genomic.elet.polimi.it/virusviz/static/#!/home",
+    "virusviz": "http://genomic.elet.polimi.it/virusviz/static/#!/",
     "mail_enabled": "true",
     "mail_address": "virusurf@aol.com",
     "mail_password": "pvrmfhswyzhfvled"

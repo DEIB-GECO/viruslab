@@ -130,7 +130,7 @@ def upload():
         "failedMessage": "",
         "notifyTo": email,
         "jsonAddress": urllib.parse.quote(CONF["jsonApi"])+id,
-        "virusVizAddress": CONF["virusviz"],
+        "virusVizAddress": CONF["virusviz"]+"home",
         "startedAt": int(round(time.time() * 1000))
     }
 
@@ -245,7 +245,7 @@ def sendEmail(id, success):
         logger.debug(app.config['MAIL_USERNAME'])
         logger.debug(app.config['MAIL_PASSWORD'])
 
-        landing = CONF["host"]+CONF["base_url"]+"/#!/"+id
+        landing = CONF["virusviz"]+"fasta/"+id
 
         subject = "Processing completed." if(success) else "Execution failed."
 
