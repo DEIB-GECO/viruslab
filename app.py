@@ -120,6 +120,7 @@ def upload():
     email = request.form.get('emailAddress')
     fasta = request.form.get('fastaText')
     meta = request.form.get('metaText')
+    taxon_id = request.form.get('taxon_id')
 
     id = generateUUID()
     logger.debug(id)
@@ -131,14 +132,15 @@ def upload():
         "notifyTo": email,
         "jsonAddress": urllib.parse.quote(CONF["jsonApi"])+id,
         "virusVizAddress": CONF["virusviz"]+"home",
-        "startedAt": int(round(time.time() * 1000))
+        "startedAt": int(round(time.time() * 1000)),
+        "taxon_id": taxon_id
     }
 
     JSON[id] = {"ready":False}
 
     def async_function():
         try:
-            process(id, fasta, meta)
+            process(id, fasta, meta, taxon_id)
         except Exception as e:
             STATUS[id] = {
                 "ready": False,
@@ -155,7 +157,7 @@ def upload():
     return json.dumps({"id": id})
 
 # Process the uploaded files (@pietro,@arif)
-def process(id, fastaText, metaText):
+def process(id, fastaText, metaText, taxon_id):
 
     # success: you call  setJSON(id, json_as_python_dictionary)
     # error: you call setError(id, errorMessage)
