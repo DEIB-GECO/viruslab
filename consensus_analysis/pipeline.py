@@ -623,10 +623,20 @@ def parse_inputs(input_fasta, input_metadata):
 
 def pipeline(sequences, metadata, pid, taxon_id):
 
-    print(f"###### Taxon id: {taxon_id}, {type(taxon_id)} ######")
+    taxon_id = int(taxon_id)
 
-    params = json.load("../static/taxons.json")
-    print(f"{type(params['taxons'][0]['taxon_id'])}")
+    with open("static/taxons.json") as f:
+        taxon_db = json.load(f)
+
+    params = [x for x in taxon_db['taxons'] if x['taxon_id'] == taxon_id][0]
+
+    # read reference FASTA of the species
+    #reference_sequence = SeqIO.parse(open(ref_fasta_file_name),
+    #                                 'fasta').__next__().seq
+    #print(f"##### => {reference_sequence}")
+    #reference_sequence = reference_sequence.lower()
+    reference_sequence = Seq.Seq(params["sequence"])
+    print(f'#\n#\n#Pipeline: {"loaded reference"}\n#\n#')
 
     ref_fasta_file_name,\
     annotation_file_name,\
@@ -634,15 +644,10 @@ def pipeline(sequences, metadata, pid, taxon_id):
     snpeff_db_name,\
     blast_meta_file,\
     product_json_file, \
-    blast_db_name = parameters[taxon_id]
+    blast_db_name = parameters["sars_cov_2"]
 
     print(f'#\n#\n#Pipeline: {"load parameters"}\n#\n#')
 
-    #read reference FASTA of the species
-    reference_sequence = SeqIO.parse(open(ref_fasta_file_name),
-                                     'fasta').__next__().seq
-    reference_sequence = reference_sequence.lower()
-    print(f'#\n#\n#Pipeline: {"loaded reference"}\n#\n#')
 
     ## load blast metadata
     blast_meta_dict = {}
