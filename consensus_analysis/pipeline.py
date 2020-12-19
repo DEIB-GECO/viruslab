@@ -631,10 +631,6 @@ def pipeline(sequences, metadata, pid, taxon_id):
     params = [x for x in taxon_db['taxons'] if x['taxon_id'] == taxon_id][0]
 
     # read reference FASTA of the species
-    #reference_sequence = SeqIO.parse(open(ref_fasta_file_name),
-    #                                 'fasta').__next__().seq
-    #print(f"##### => {reference_sequence}")
-    #reference_sequence = reference_sequence.lower()
     reference_sequence = Seq.Seq(params["sequence"])
     print(f'#\n#\n#Pipeline: {"loaded reference"}\n#\n#')
 
@@ -644,7 +640,7 @@ def pipeline(sequences, metadata, pid, taxon_id):
     blast_meta_file = params["blast_meta_file"]
     blast_db_name = params["blast_db_name"]
 
-    print(f'#\n#\n#Pipeline: {"load parameters"}\n#\n#')
+    print(f'#\n#\n#Pipeline: {"loaded parameters"}\n#\n#')
 
 
     ## load blast metadata
@@ -657,22 +653,26 @@ def pipeline(sequences, metadata, pid, taxon_id):
 
     ## Call Pangolin for lineage assignement
     pangolin_fasta = f"pangolin_tmp/pango_{pid}.fast"
-    pangolin_output = f"pango_{pid}.pan"
-    with open(pangolin_fasta, "w") as f:
-        for sid, seq in sequences.items():
-            f.write(f">{sid}\n")
-            f.write(f'{str(seq)}\n')
-    os.system(f"bash pangolin_script.sh {pangolin_fasta} pangolin_tmp {pangolin_output}")
-    with open("pangolin_tmp/"+ pangolin_output) as f:
-        f.readline()
-        for line in f:
-            sid, lineage, _, _, status, _ = tuple(line.strip().split(","))
-            if status != "passed_qc":
-                lineage = "unknown"
-            metadata[sid]['lineage'] = lineage
-    os.remove("pangolin_tmp/"+ pangolin_output)
+    if taxon_id == 2697049:
+        try:
+            pangolin_output = f"pango_{pid}.pan"
+            with open(pangolin_fasta, "w") as f:
+                for sid, seq in sequences.items():
+                    f.write(f">{sid}\n")
+                    f.write(f'{str(seq)}\n')
+            os.system(f"bash pangolin_script.sh {pangolin_fasta} pangolin_tmp {pangolin_output}")
+            with open("pangolin_tmp/"+ pangolin_output) as f:
+                f.readline()
+                for line in f:
+                    sid, lineage, _, _, status, _ = tuple(line.strip().split(","))
+                    if status != "passed_qc":
+                        lineage = "unknown"
+                    metadata[sid]['lineage'] = lineage
+            os.remove("pangolin_tmp/"+ pangolin_output)
+        except Exception:
+            pass
 
-    print(f'#\n#\n#Pipeline: {"Pangolin executed"}\n#\n#')
+        print(f'#\n#\n#Pipeline: {"Pangolin executed"}\n#\n#')
 
     #call for blast
     blast_out_file = f'{pid}.blast'
