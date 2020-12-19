@@ -638,13 +638,19 @@ def pipeline(sequences, metadata, pid, taxon_id):
     reference_sequence = Seq.Seq(params["sequence"])
     print(f'#\n#\n#Pipeline: {"loaded reference"}\n#\n#')
 
-    ref_fasta_file_name,\
-    annotation_file_name,\
-    chr_name,\
-    snpeff_db_name,\
-    blast_meta_file,\
-    product_json_file, \
-    blast_db_name = parameters["sars_cov_2"]
+    annotation_file_name = params["annotation_file"]
+    chr_name = params["chr_name"]
+    snpeff_db_name = params["snpeff_db_name"]
+    blast_meta_file = params["blast_meta_file"]
+    blast_db_name = params["blast_db_name"]
+
+    #_,\
+    #_,\
+    #_,\
+    #_,\
+    #_,\
+    #product_json_file, \
+    #_ = parameters["sars_cov_2"]
 
     print(f'#\n#\n#Pipeline: {"load parameters"}\n#\n#')
 
@@ -703,16 +709,16 @@ def pipeline(sequences, metadata, pid, taxon_id):
     print(f'#\n#\n#Pipeline: {"Blast executed"}\n#\n#')
 
     #read product json
-    with open(product_json_file) as json_file:
-        product_json = json.load(json_file)
+    #with open(product_json_file) as json_file:
+    #    product_json = json.load(json_file)
 
     #initialize json.results
     result_json = {
         "sequencesCount": len(sequences.keys()),
         "chrom": chr_name,
         "referenceSequence": str(reference_sequence),
-        "schema": get_metadata_schema(metadata),
-        "products": product_json['products']
+        "schema": get_metadata_schema(metadata)
+        #"products": product_json['products']
     }
 
     print(f'#\n#\n#Pipeline: {"Initialize json"}\n#\n#')
