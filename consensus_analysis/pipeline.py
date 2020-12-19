@@ -621,14 +621,17 @@ def parse_inputs(input_fasta, input_metadata):
 
     return sequences, metadata
 
-def pipeline(sequences, metadata, pid, species = 'sars_cov_2'):
+def pipeline(sequences, metadata, pid, taxon_id):
+
+    print(f"###### Taxon id: {taxon_id}, {type(taxon_id)} ######")
+
     ref_fasta_file_name,\
     annotation_file_name,\
     chr_name,\
     snpeff_db_name,\
     blast_meta_file,\
     product_json_file, \
-    blast_db_name = parameters[species]
+    blast_db_name = parameters[taxon_id]
 
     print(f'#\n#\n#Pipeline: {"load parameters"}\n#\n#')
 
