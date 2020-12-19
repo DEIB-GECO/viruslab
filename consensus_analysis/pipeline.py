@@ -644,14 +644,6 @@ def pipeline(sequences, metadata, pid, taxon_id):
     blast_meta_file = params["blast_meta_file"]
     blast_db_name = params["blast_db_name"]
 
-    #_,\
-    #_,\
-    #_,\
-    #_,\
-    #_,\
-    #product_json_file, \
-    #_ = parameters["sars_cov_2"]
-
     print(f'#\n#\n#Pipeline: {"load parameters"}\n#\n#')
 
 
@@ -714,6 +706,7 @@ def pipeline(sequences, metadata, pid, taxon_id):
 
     #initialize json.results
     result_json = {
+        "taxon_id" : taxon_id,
         "sequencesCount": len(sequences.keys()),
         "chrom": chr_name,
         "referenceSequence": str(reference_sequence),
