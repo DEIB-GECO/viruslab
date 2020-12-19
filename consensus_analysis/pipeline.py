@@ -625,6 +625,9 @@ def pipeline(sequences, metadata, pid, taxon_id):
 
     print(f"###### Taxon id: {taxon_id}, {type(taxon_id)} ######")
 
+    params = json.load("../static/taxons.json")
+    print(f"{type(params['taxons'][0]['taxon_id'])}")
+
     ref_fasta_file_name,\
     annotation_file_name,\
     chr_name,\
