@@ -17,6 +17,11 @@
 
         },
         {
+            "blast_db_name" : "sars_cov_1",
+            "snpeff_db_name" : "sars_cov_1",
+            "chr_name" : "NC_004718",
+            "annotation_file": "./annotation_files/new_sars_cov_1.tsv",
+            "blast_meta_file" : "blast_db/694009.meta",
             "taxon_id":694009,
             "taxon_name":  "Severe acute respiratory syndrome-related coronavirus",
             "length": 29751,
@@ -25,6 +30,11 @@
             "products":{"A":[{"name":"small envelope E protein","start":26117,"end":26347,"row":0,"svg": "img/regions/image_694009_e.svg"},{"name":"membrane glycoprotein M","start":26398,"end":27063,"row":0},{"name":"Orf14","start":28583,"end":28795,"row":0},{"name":"nucleocapsid protein","start":28120,"end":29388,"row":0,"svg": "img/regions/image_694009_n.svg"},{"name":"spike glycoprotein","start":21492,"end":25259,"row":0,"svg": "img/regions/image_694009_spike.svg"},{"name":"Orf11","start":27864,"end":28118,"row":0},{"name":"Orf10","start":27779,"end":27898,"row":0},{"name":"Orf8","start":27273,"end":27641,"row":0},{"name":"replicase 1AB","start":265,"end":21485,"row":0},{"name":"Orf13","start":28130,"end":28426,"row":0},{"name":"Orf3","start":25268,"end":26092,"row":0},{"name":"Orf4","start":25689,"end":26153,"row":0},{"name":"Orf7","start":27074,"end":27265,"row":0},{"name":"Orf9","start":27638,"end":27772,"row":0}],"N":[]}
         },
         {
+            "blast_db_name" : "bombali_ebolavirus",
+            "snpeff_db_name" : "bombali_ebolavirus",
+            "chr_name" : "NC_039345",
+            "annotation_file": "./annotation_files/bombali_ebolavirus.tsv",
+            "blast_meta_file" : "blast_db/2010960.meta",
             "taxon_id":2010960,
             "taxon_name":  "Bombali ebolavirus",
             "length": 19043,
@@ -33,6 +43,11 @@
             "products":{"A":[{"name":"second secreted glycoprotein","start":6043,"end":6940,"row":0},{"name":"spike glycoprotein","start":6043,"end":8060,"row":0},{"name":"small secreted glycoprotein","start":6043,"end":7140,"row":0},{"name":"RNA-dependent RNA polymerase","start":11666,"end":18298,"row":0},{"name":"nucleoprotein","start":464,"end":2683,"row":0},{"name":"membrane-associated protein","start":10399,"end":11154,"row":0},{"name":"minor nucleoprotein","start":8484,"end":9383,"row":0},{"name":"polymerase complex protein","start":3114,"end":4139,"row":0},{"name":"matrix protein","start":4466,"end":5446,"row":0}],"N":[]}
         },
         {
+            "blast_db_name" : "mers",
+            "snpeff_db_name" : "mers",
+            "chr_name" : "NC_019843",
+            "annotation_file": "./annotation_files/mers.tsv",
+            "blast_meta_file" : "blast_db/1335626.meta",
             "taxon_id":1335626,
             "taxon_name":  "Middle East respiratory syndrome-related coronavirus",
             "length": 30119,
@@ -41,6 +56,11 @@
             "products":{"A":[{"name":"envelope protein","start":27590,"end":27838,"row":0,"svg": "img/regions/image_1335626_e.svg"},{"name":"membrane protein","start":27853,"end":28512,"row":0},{"name":"nucleoprotein","start":28566,"end":29807,"row":0},{"name":"nsp10 protein","start":12990,"end":13409,"row":0},{"name":"nsp9 protein","start":12660,"end":12989,"row":0},{"name":"nsp8 protein","start":12063,"end":12659,"row":0},{"name":"nsp7 protein","start":11814,"end":12062,"row":0},{"name":"nsp5 protein","start":10020,"end":10937,"row":0},{"name":"nsp4 protein","start":8499,"end":10019,"row":0},{"name":"nsp3 protein","start":2838,"end":8498,"row":0},{"name":"nsp11 protein","start":13410,"end":13451,"row":0},{"name":"nsp14 protein","start":18002,"end":19573,"row":0},{"name":"nsp12 protein","start":13410,"end":16207,"row":0},{"name":"1AB polyprotein","start":279,"end":21514,"row":0},{"name":"nsp13 protein","start":16208,"end":18001,"row":0},{"name":"nsp2 protein","start":858,"end":2837,"row":0},{"name":"nsp6 protein","start":10938,"end":11813,"row":0},{"name":"nsp1 protein","start":279,"end":857,"row":0},{"name":"1A polyprotein","start":279,"end":13454,"row":0},{"name":"nsp16 protein","start":20603,"end":21511,"row":0},{"name":"nsp15 protein","start":19574,"end":20602,"row":0},{"name":"NS3 protein","start":25532,"end":25843,"row":0},{"name":"NS4A protein","start":25852,"end":26181,"row":0},{"name":"NS4B protein","start":26093,"end":26833,"row":0},{"name":"NS5 protein","start":26840,"end":27514,"row":0},{"name":"ORF8b protein","start":28762,"end":29100,"row":0},{"name":"spike glycoprotein","start":21456,"end":25517,"row":0,"svg": "img/regions/image_1335626_spike.svg"}],"N":[{"name":"orf1ab","start":279,"end":21514,"row":0},{"name":"orf3","start":25532,"end":25843,"row":0},{"name":"orf4a","start":25852,"end":26181,"row":0},{"name":"orf4b","start":26093,"end":26833,"row":0},{"name":"orf5","start":26840,"end":27514,"row":0},{"name":"orf8b","start":28762,"end":29100,"row":0},{"name":"S","start":21456,"end":25517,"row":0}]}
         },
         {
+            "blast_db_name" : "tai_forest_ebolavirus",
+            "snpeff_db_name" : "tai_forest_ebolavirus",
+            "chr_name" : "NC_014372",
+            "annotation_file": "./annotation_files/tai_forest_ebolavirus.tsv",
+            "blast_meta_file" : "blast_db/186541.meta",
             "taxon_id":186541,
             "taxon_name":  "Tai Forest ebolavirus",
             "length": 18935,
@@ -49,6 +69,11 @@
             "products":{"A":[{"name":"spike glycoprotein","start":6027,"end":8056,"row":0},{"name":"small secreted glycoprotein","start":6027,"end":7124,"row":0},{"name":"second secreted glycoprotein","start":6027,"end":6936,"row":0},{"name":"RNA-dependent RNA polymerase","start":11566,"end":18198,"row":0},{"name":"nucleoprotein","start":464,"end":2683,"row":0},{"name":"membrane-associated protein","start":10339,"end":11094,"row":0},{"name":"minor nucleoprotein","start":8503,"end":9372,"row":0},{"name":"polymerase complex protein","start":3114,"end":4139,"row":0},{"name":"matrix protein","start":4467,"end":5447,"row":0}],"N":[]}
         },
         {
+            "blast_db_name" : "bundibugyo_ebolavirus",
+            "snpeff_db_name" : "bundibugyo_ebolavirus",
+            "chr_name" : "NC_014373",
+            "annotation_file": "./annotation_files/bundibugyo_ebolavirus.tsv",
+            "blast_meta_file" : "blast_db/565995.meta",
             "taxon_id":565995,
             "taxon_name":  "Bundibugyo ebolavirus",
             "length": 18940,
@@ -57,6 +82,11 @@
             "products":{"A":[{"name":"small secreted glycoprotein","start":6021,"end":7142,"row":0},{"name":"spike glycoprotein","start":6021,"end":8050,"row":0},{"name":"second secreted glycoprotein","start":6021,"end":6930,"row":0},{"name":"RNA-dependent RNA polymerase","start":11567,"end":18199,"row":0},{"name":"nucleoprotein","start":458,"end":2677,"row":0},{"name":"membrane-associated protein","start":10335,"end":11090,"row":0},{"name":"minor nucleoprotein","start":8496,"end":9365,"row":0},{"name":"polymerase complex protein","start":3108,"end":4133,"row":0},{"name":"matrix protein","start":4461,"end":5441,"row":0}],"N":[]}
         },
         {
+            "blast_db_name" : "reston_ebolavirus",
+            "snpeff_db_name" : "reston_ebolavirus",
+            "chr_name" : "NC_004161",
+            "annotation_file": "./annotation_files/reston_ebolavirus.tsv",
+            "blast_meta_file" : "blast_db/186539.meta",
             "taxon_id":186539,
             "taxon_name":  "Reston ebolavirus",
             "length": 18891,
@@ -65,6 +95,11 @@
             "products":{"A":[{"name":"second secreted glycoprotein","start":6042,"end":7038,"row":0},{"name":"small secreted glycoprotein","start":6042,"end":7145,"row":0},{"name":"spike glycoprotein","start":6042,"end":8074,"row":0},{"name":"RNA-dependent RNA polymerase","start":11550,"end":18188,"row":0},{"name":"nucleoprotein","start":464,"end":2683,"row":0},{"name":"membrane-associated protein","start":10303,"end":11058,"row":0},{"name":"minor nucleoprotein","start":8490,"end":9353,"row":0},{"name":"polymerase complex protein","start":3155,"end":4144,"row":0},{"name":"matrix protein","start":4485,"end":5480,"row":0}],"N":[]}
         },
         {
+            "blast_db_name" : "sudan_ebolavirus",
+            "snpeff_db_name" : "sudan_ebolavirus",
+            "chr_name" : "NC_006432",
+            "annotation_file": "./annotation_files/sudan_ebolavirus.tsv",
+            "blast_meta_file" : "blast_db/186540.meta",
             "taxon_id":186540,
             "taxon_name":  "Sudan ebolavirus",
             "length": 18875,
@@ -73,6 +108,11 @@
             "products":{"A":[{"name":"spike glycoprotein","start":5998,"end":8027,"row":0},{"name":"small secreted glycoprotein","start":5998,"end":7116,"row":0},{"name":"second secreted glycoprotein","start":5998,"end":6955,"row":0},{"name":"RNA-dependent RNA polymerase","start":11535,"end":18167,"row":0},{"name":"nucleoprotein","start":458,"end":2674,"row":0},{"name":"membrane-associated protein","start":10299,"end":11054,"row":0},{"name":"minor nucleoprotein","start":8441,"end":9307,"row":0},{"name":"polymerase complex protein","start":3138,"end":4127,"row":0},{"name":"matrix protein","start":4454,"end":5434,"row":0}],"N":[]}
         },
         {
+            "blast_db_name" : "zaire_ebolavirus",
+            "snpeff_db_name" : "zaire_ebolavirus",
+            "chr_name" : "NC_002549",
+            "annotation_file": "./annotation_files/zaire_ebolavirus.tsv",
+            "blast_meta_file" : "blast_db/186538.meta",
             "taxon_id":186538,
             "taxon_name":  "Zaire ebolavirus",
             "length": 18959,
@@ -81,6 +121,11 @@
             "products":{"A":[{"name":"spike glycoprotein","start":6039,"end":8068,"row":0},{"name":"second secreted glycoprotein","start":6039,"end":6933,"row":0},{"name":"small secreted glycoprotein","start":6039,"end":7133,"row":0},{"name":"RNA-dependent RNA polymerase","start":11581,"end":18219,"row":0},{"name":"nucleoprotein","start":470,"end":2689,"row":0},{"name":"membrane-associated protein","start":10345,"end":11100,"row":0},{"name":"minor nucleoprotein","start":8509,"end":9375,"row":0},{"name":"polymerase complex protein","start":3129,"end":4151,"row":0},{"name":"matrix protein","start":4479,"end":5459,"row":0}],"N":[]}
         },
         {
+            "blast_db_name" : "dengue_4",
+            "snpeff_db_name" : "dengue_virus_4",
+            "chr_name" : "NC_002640",
+            "annotation_file": "./annotation_files/dengue_virus_4.tsv",
+            "blast_meta_file" : "blast_db/11070.meta",
             "taxon_id":11070,
             "taxon_name":  "Dengue virus 4",
             "length": 10649,
@@ -89,6 +134,11 @@
             "products":{"A":[{"name":"nonstructural protein NS3","start":4524,"end":6377,"row":0},{"name":"nonstructural protein NS4A","start":6378,"end":6758,"row":0},{"name":"protein 2K","start":6759,"end":6827,"row":0},{"name":"nonstructural protein NS4B","start":6828,"end":7562,"row":0},{"name":"nonstructural protein NS2B","start":4134,"end":4523,"row":0},{"name":"anchored capsid protein ancC","start":102,"end":440,"row":0},{"name":"capsid protein C","start":102,"end":398,"row":0},{"name":"membrane glycoprotein precursor prM","start":441,"end":938,"row":0},{"name":"protein pr","start":441,"end":713,"row":0},{"name":"membrane glycoprotein M","start":714,"end":938,"row":0},{"name":"RNA-dependent RNA polymerase NS5","start":7563,"end":10262,"row":0},{"name":"envelope protein E","start":939,"end":2423,"row":0},{"name":"nonstructural protein NS1","start":2424,"end":3479,"row":0},{"name":"nonstructural protein NS2A","start":3480,"end":4133,"row":0},{"name":"polyprotein","start":102,"end":10265,"row":0}],"N":[]}
         },
         {
+            "blast_db_name" : "dengue_3",
+            "snpeff_db_name" : "dengue_virus_3",
+            "chr_name" : "NC_001475",
+            "annotation_file": "./annotation_files/dengue_virus_3.tsv",
+            "blast_meta_file" : "blast_db/11069.meta",
             "taxon_id":11069,
             "taxon_name":  "Dengue virus 3",
             "length": 10707,
@@ -97,6 +147,11 @@
             "products":{"A":[{"name":"RNA-dependent RNA polymerase NS5","start":7565,"end":10264,"row":0},{"name":"nonstructural protein NS4B","start":6821,"end":7564,"row":0},{"name":"protein 2K","start":6752,"end":6820,"row":0},{"name":"nonstructural protein NS4A","start":6371,"end":6751,"row":0},{"name":"nonstructural protein NS3","start":4514,"end":6370,"row":0},{"name":"nonstructural protein NS2B","start":4124,"end":4513,"row":0},{"name":"nonstructural protein NS2A","start":3470,"end":4123,"row":0},{"name":"envelope protein E","start":935,"end":2413,"row":0},{"name":"membrane glycoprotein M","start":710,"end":934,"row":0},{"name":"protein pr","start":437,"end":709,"row":0},{"name":"membrane glycoprotein precursor prM","start":437,"end":934,"row":0},{"name":"capsid protein C","start":95,"end":394,"row":0},{"name":"anchored capsid protein ancC","start":95,"end":436,"row":0},{"name":"polyprotein","start":95,"end":10267,"row":0},{"name":"nonstructural protein NS1","start":2414,"end":3469,"row":0}],"N":[]}
         },
         {
+            "blast_db_name" : "dengue_2",
+            "snpeff_db_name" : "dengue_virus_2",
+            "chr_name" : "NC_001474",
+            "annotation_file": "./annotation_files/dengue_virus_2.tsv",
+            "blast_meta_file" : "blast_db/11060.meta",
             "taxon_id":11060,
             "taxon_name":  "Dengue virus 2",
             "length": 10723,
@@ -105,6 +160,11 @@
             "products":{"A":[{"name":"nonstructural protein NS4B","start":6826,"end":7569,"row":0},{"name":"anchored capsid protein ancC","start":97,"end":438,"row":0},{"name":"capsid protein C","start":97,"end":396,"row":0},{"name":"nonstructural protein NS4A","start":6376,"end":6756,"row":0},{"name":"membrane glycoprotein precursor prM","start":439,"end":936,"row":0},{"name":"protein pr","start":439,"end":711,"row":0},{"name":"membrane glycoprotein M","start":712,"end":936,"row":0},{"name":"envelope protein E","start":937,"end":2421,"row":0},{"name":"nonstructural protein NS1","start":2422,"end":3477,"row":0},{"name":"nonstructural protein NS2A","start":3478,"end":4131,"row":0},{"name":"nonstructural protein NS2B","start":4132,"end":4521,"row":0},{"name":"nonstructural protein NS3","start":4522,"end":6375,"row":0},{"name":"protein 2K","start":6757,"end":6825,"row":0},{"name":"RNA-dependent RNA polymerase NS5","start":7570,"end":10269,"row":0},{"name":"polyprotein","start":97,"end":10272,"row":0}],"N":[]}
         },
         {
+            "blast_db_name" : "dengue_1",
+            "snpeff_db_name" : "dengue_virus_1",
+            "chr_name" : "NC_001477",
+            "annotation_file": "./annotation_files/dengue_virus_1.tsv",
+            "blast_meta_file" : "blast_db/11053.meta",
             "taxon_id":11053,
             "taxon_name":  "Dengue virus 1",
             "length": 10735,

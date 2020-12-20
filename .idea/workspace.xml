@@ -4,7 +4,28 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="03b349b5-ca85-48b8-8257-551225f69fe1" name="Default Changelist" comment="" />
+    <list default="true" id="03b349b5-ca85-48b8-8257-551225f69fe1" name="Default Changelist" comment="Add pangolin">
+      <change afterPath="$PROJECT_DIR$/blast_db/11053.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blast_db/11060.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blast_db/11069.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blast_db/11070.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blast_db/1335626.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blast_db/186538.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blast_db/186539.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blast_db/186540.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blast_db/186541.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blast_db/2010960.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blast_db/2697049.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blast_db/565995.meta" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/blast_db/694009.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/annotation_files/sars_cov_2_products.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/taxons.json" beforeDir="false" afterPath="$PROJECT_DIR$/static/taxons.json" afterDir="false" />
+    </list>
+    <list id="d4a13a9f-0cfb-460b-a533-509b94c06f11" name="- fix output type of pipeline" comment="" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -15,6 +36,7 @@
       <list>
         <option value="Flask Main" />
         <option value="HTML File" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
@@ -29,6 +51,9 @@
       </map>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="JupyterTrust" id="d9ae19ab-cf9d-427c-bd3b-28ace7ebc634" />
   <component name="ProjectId" id="1kShFRlJPsj2rH1ihIKMF4aAia2" />
   <component name="ProjectViewState">
@@ -42,6 +67,24 @@
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/blast_db" />
+      <recent name="$PROJECT_DIR$" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
   </component>
   <component name="RunManager">
     <configuration name="ViruSurf-EIT" type="Python.FlaskServer">
@@ -60,7 +103,10 @@
       <method v="2" />
     </configuration>
   </component>
-  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SpellCheckerSettings" BundledDictionaries="0" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" Dictionaries="0" CorrectionsLimit="5" DefaultDictionary="application-level" UseSingleDictionary="true" />
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="03b349b5-ca85-48b8-8257-551225f69fe1" name="Default Changelist" comment="" />
@@ -70,10 +116,215 @@
       <updated>1605699795335</updated>
       <workItem from="1605699814291" duration="19328000" />
     </task>
+    <task id="LOCAL-00001" summary="- fix output type of pipeline">
+      <created>1606493322543</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1606493322543</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Commit for testing">
+      <created>1606509628421</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1606509628421</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Add some print for debugging purpose">
+      <created>1606555584599</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1606555584599</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Add pangolin">
+      <created>1606558734197</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1606558734197</updated>
+    </task>
+    <task id="LOCAL-00005" summary="- fix pangolin output file problem">
+      <created>1606560289174</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1606560289174</updated>
+    </task>
+    <task id="LOCAL-00006" summary="fix bug pangolin">
+      <created>1606567095820</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1606567095820</updated>
+    </task>
+    <task id="LOCAL-00007" summary="- add blast support">
+      <created>1606586645991</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1606586645991</updated>
+    </task>
+    <task id="LOCAL-00008" summary="- sequences are now low case">
+      <created>1607003534724</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1607003534724</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Add blast quality scores">
+      <created>1607005320050</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1607005320050</updated>
+    </task>
+    <task id="LOCAL-00010" summary="- fix bug blast">
+      <created>1607006807495</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1607006807495</updated>
+    </task>
+    <task id="LOCAL-00011" summary="fix bug of the order of the blast result">
+      <created>1607007377986</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1607007377986</updated>
+    </task>
+    <task id="LOCAL-00012" summary="fix bug of the order of the blast result bis">
+      <created>1607007963719</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1607007963719</updated>
+    </task>
+    <task id="LOCAL-00013" summary="- processing of metadata type">
+      <created>1607028913868</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1607028913868</updated>
+    </task>
+    <task id="LOCAL-00014" summary="fix data import bug">
+      <created>1607082225092</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1607082225092</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Fix snpeff file name bug">
+      <created>1608049458682</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1608049458682</updated>
+    </task>
+    <task id="LOCAL-00016" summary="correct snpeff output error">
+      <created>1608050844360</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1608050844360</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Add pangolin">
+      <created>1608376725669</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1608376725669</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Add pangolin">
+      <created>1608381633313</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1608381633313</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Add pangolin">
+      <created>1608382191884</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1608382191884</updated>
+    </task>
+    <task id="LOCAL-00020" summary="Add pangolin">
+      <created>1608388150658</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1608388150658</updated>
+    </task>
+    <task id="LOCAL-00021" summary="Correct error in JSON">
+      <created>1608388267683</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1608388267683</updated>
+    </task>
+    <task id="LOCAL-00022" summary="Read parameters from taxons.json">
+      <created>1608391709119</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1608391709119</updated>
+    </task>
+    <task id="LOCAL-00023" summary="Add taxon_id to output json">
+      <created>1608393110263</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1608393110263</updated>
+    </task>
+    <task id="LOCAL-00024" summary="Execute pangolin only for sars cov 2">
+      <created>1608396197070</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1608396197070</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="- fix output type of pipeline" />
+    <MESSAGE value="Commit for testing" />
+    <MESSAGE value="Add some print for debugging purpose" />
+    <MESSAGE value="- fix pangolin output file problem" />
+    <MESSAGE value="fix bug pangolin" />
+    <MESSAGE value="- add blast support" />
+    <MESSAGE value="- sequences are now low case" />
+    <MESSAGE value="Add blast quality scores" />
+    <MESSAGE value="- fix bug blast" />
+    <MESSAGE value="fix bug of the order of the blast result" />
+    <MESSAGE value="fix bug of the order of the blast result bis" />
+    <MESSAGE value="- processing of metadata type" />
+    <MESSAGE value="fix data import bug" />
+    <MESSAGE value="Fix snpeff file name bug" />
+    <MESSAGE value="correct snpeff output error" />
+    <MESSAGE value="Add pangolin" />
+    <MESSAGE value="Correct error in JSON" />
+    <MESSAGE value="Read parameters from taxons.json" />
+    <MESSAGE value="Add taxon_id to output json" />
+    <MESSAGE value="Execute pangolin only for sars cov 2" />
+    <option name="LAST_COMMIT_MESSAGE" value="Execute pangolin only for sars cov 2" />
   </component>
   <component name="WindowStateProjectService">
     <state x="430" y="256" key="#Notifications" timestamp="1605706817979">
