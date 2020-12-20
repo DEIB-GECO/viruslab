@@ -46,6 +46,14 @@ with app.app_context():
     setupMailConfig(app, CONF)
     mail = Mail(app)
 
+
+@app.after_request
+def after_request(response):
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate, public, max-age=0"
+    response.headers["Expires"] = 0
+    response.headers["Pragma"] = "no-cache"
+    return response
+
 # Redirect to /virusviz-eit
 @app.route('/')
 def hello():
