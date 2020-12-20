@@ -653,13 +653,13 @@ def pipeline(sequences, metadata, pid, taxon_id):
 
     ## Call Pangolin for lineage assignement
     pangolin_fasta = f"pangolin_tmp/pango_{pid}.fast"
+    with open(pangolin_fasta, "w") as f:
+        for sid, seq in sequences.items():
+            f.write(f">{sid}\n")
+            f.write(f'{str(seq)}\n')
     if taxon_id == 2697049:
         try:
             pangolin_output = f"pango_{pid}.pan"
-            with open(pangolin_fasta, "w") as f:
-                for sid, seq in sequences.items():
-                    f.write(f">{sid}\n")
-                    f.write(f'{str(seq)}\n')
             os.system(f"bash pangolin_script.sh {pangolin_fasta} pangolin_tmp {pangolin_output}")
             with open("pangolin_tmp/"+ pangolin_output) as f:
                 f.readline()
