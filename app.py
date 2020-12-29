@@ -129,6 +129,7 @@ def upload():
     fasta = request.form.get('fastaText')
     meta = request.form.get('metaText')
     taxon_id = request.form.get('taxon_id')
+    redirect_url = request.form.get('redirect_url')
 
     id = generateUUID()
     logger.debug(id)
@@ -139,7 +140,7 @@ def upload():
         "failedMessage": "",
         "notifyTo": email,
         "jsonAddress": urllib.parse.quote(CONF["jsonApi"])+id,
-        "virusVizAddress": CONF["virusviz"]+"home",
+        "redirect_url": redirect_url,
         "startedAt": int(round(time.time() * 1000)),
         "taxon_id": taxon_id
     }
@@ -255,7 +256,7 @@ def sendEmail(id, success):
         logger.debug(app.config['MAIL_USERNAME'])
         logger.debug(app.config['MAIL_PASSWORD'])
 
-        landing = CONF["virusviz"]+"fasta/"+id
+        landing = STATUS["redirect_url"]+"/"+id
 
         subject = "Processing completed." if(success) else "Execution failed."
 
