@@ -256,7 +256,7 @@ def sendEmail(id, success):
         logger.debug(app.config['MAIL_USERNAME'])
         logger.debug(app.config['MAIL_PASSWORD'])
 
-        landing = STATUS["redirect_url"]+"/"+id
+        landing = STATUS[id]["redirect_url"]+"/"+id
 
         subject = "Processing completed." if(success) else "Execution failed."
 
